@@ -5,11 +5,12 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#03173d",
+  "description":"爱生活，爱囤货。",
   "icons": [
     {
-      "src": "icon-128.png",
+      "src": "icon-512.png",
       "type": "image/png",
-      "sizes": "128x128"
+      "sizes": "512x512"
     }
   ]
 }
