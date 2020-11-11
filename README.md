@@ -1,2 +1,3 @@
 # axiangblogBlazor
-Blazor
+Net 5.0 + Blazor´î½¨
+
