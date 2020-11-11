@@ -5,3 +5,9 @@
 Welcome to your new app.
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+<p>Powered by @netVersion</p>
+
+@code{
+
+    private static string netVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+}

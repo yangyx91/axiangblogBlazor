@@ -1,3 +1,3 @@
-# axiangblogBlazor
-Net 5.0 + Blazor�
+﻿# axiangblogBlazor
+Net 5.0 + Blazor搭建
 
