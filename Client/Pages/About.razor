@@ -1,13 +1,9 @@
-﻿@page "/about"
+﻿@page  "/about"
 
-<h3>About 爱囤货的象叔叔</h3>
+<h3>About</h3>
 
-<p>这里是一段描述</p>
+<p>Powered by @netVersionDesc</p>
 
-<p>Powered by @netVersion</p>
-
-@code{
-
-    private static string netVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+@code {
+    private string netVersionDesc = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
 }
-
