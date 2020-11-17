@@ -31,6 +31,8 @@
 </div>
 
 @code {
+    [Parameter] 
+    public string Title { get; set; } 
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;

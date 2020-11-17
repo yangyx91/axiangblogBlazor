@@ -1,25 +1,61 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Client</title>
+    <title>爱囤货的象叔叔</title>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta name="description" content="聚焦Win10、C#、Xbox、Asp.Net/Core、Web Api" />
+    <meta name="keywords" content="Win10,Win10开发,Xbox,.Net Core,Asp.net,Api,UWP,MVC,C#" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <base href="/" />
+
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="Client.styles.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <script src="js/jquery/jquery.min.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
 </head>
 
 <body>
     <div id="app">Loading...</div>
-
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
+    </div>
+    <div class="top-row px-4" id="weather-v2-plugin-simple" style="width:100px;">
+        <script>
+            WIDGET = {
+                CONFIG: {
+                    "modules": "01234",
+                    "background": 1,
+                    "tmpColor": "FFFFFF",
+                    "tmpSize": 16,
+                    "cityColor": "FFFFFF",
+                    "citySize": 16,
+                    "aqiSize": 16,
+                    "weatherIconSize": 24,
+                    "alertIconSize": 18,
+                    "padding": "10px 10px 10px 10px",
+                    "shadow": "1",
+                    "language": "zh",
+                    "borderRadius": 5,
+                    "fixed": "true",
+                    "vertical": "middle",
+                    "horizontal": "center",
+                    "key": "UZXiJpyiBU"
+                }
+            }
+        </script>
+        <script src="https://apip.weatherdt.com/simple/static/js/weather-simple-common.js?v=2.0"></script>
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
