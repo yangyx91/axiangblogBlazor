@@ -28,7 +28,7 @@
         todayImg = await http.GetFromJsonAsync<BingImg>("api/todayBingImg");
         if (todayImg!=null&& !string.IsNullOrEmpty(todayImg.url))
         {
-            bingImgPath = todayImg.url;
+            bingImgPath = "https://www.bing.com" + todayImg.url;
 
         }
     }
