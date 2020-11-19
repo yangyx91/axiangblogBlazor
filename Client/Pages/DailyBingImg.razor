@@ -1,0 +1,44 @@
+﻿@page "/todayBingImg"
+
+@inject HttpClient http
+
+<h1>必应美图</h1>
+
+<p>今日：@todayDate</p>
+<p>必应美图：@bingImgName</p>
+
+<div>
+    <img src="@bingImgPath" width="600px" alt="@bingImgName"/>
+</div>
+
+<button class="btn btn-primary" @onclick="GetTodayBingImg">今日壁纸</button>
+
+@code {
+
+    /// <summary>
+    /// 日期
+    /// </summary>
+    private string todayDate = TimeZoneInfo.ConvertTimeFromUtc(
+        DateTime.UtcNow,
+        TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")
+        ).ToString("yyyy-MM-dd");
+
+    private string apiResponse;
+
+    private string bingImgPath;
+
+    private string bingImgName;
+
+    private BingImg todayImg;
+
+    private async Task GetTodayBingImg()
+    {
+        todayImg = await http.GetFromJsonAsync<BingImg>("api/todayBingImg");
+        if (todayImg!=null&& !string.IsNullOrEmpty(todayImg.url))
+        {
+            bingImgName = todayImg.copyright;
+            bingImgPath = "https://www.bing.com" + todayImg.url;
+
+        }
+    }
+}
