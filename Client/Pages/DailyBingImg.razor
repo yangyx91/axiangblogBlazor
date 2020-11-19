@@ -19,8 +19,8 @@
     /// 日期
     /// </summary>
     private string todayDate = TimeZoneInfo.ConvertTimeFromUtc(
-        DateTime.UtcNow,
-        TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")
+        DateTime.UtcNow, TZConvert.GetTimeZoneInfo("Asia/Shanghai")
+        //TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")
         ).ToString("yyyy-MM-dd");
 
     private string apiResponse;
