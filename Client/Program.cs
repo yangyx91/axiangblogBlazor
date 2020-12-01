@@ -19,6 +19,12 @@ namespace Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            //¼¯³ÉÎ¢ÈíÕË»§Authentication
+            builder.Services.AddMsalAuthentication(options =>
+            {
+                builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+            });
+
             await builder.Build().RunAsync();
         }
     }
