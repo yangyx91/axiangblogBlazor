@@ -23,6 +23,9 @@ namespace Client
             builder.Services.AddMsalAuthentication(options =>
             {
                 builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
+                options.ProviderOptions.LoginMode = "popup";
+                options.ProviderOptions.DefaultAccessTokenScopes.Add("openid");
+                options.ProviderOptions.DefaultAccessTokenScopes.Add("offline_access");
             });
 
             await builder.Build().RunAsync();
