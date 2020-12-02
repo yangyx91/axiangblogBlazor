@@ -19,6 +19,8 @@ namespace Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            builder.Services.AddGraphClient("https://graph.microsoft.com/User.Read");
+
             //¼¯³ÉÎ¢ÈíÕË»§Authentication
             builder.Services.AddMsalAuthentication(options =>
             {
@@ -27,7 +29,7 @@ namespace Client
                 options.ProviderOptions.DefaultAccessTokenScopes.Add("openid");
                 options.ProviderOptions.DefaultAccessTokenScopes.Add("offline_access");
             });
-
+            
             await builder.Build().RunAsync();
         }
     }
