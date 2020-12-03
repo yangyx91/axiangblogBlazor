@@ -13,7 +13,7 @@ using Api.DTO;
 
 namespace Api
 {
-    public static class Function1
+    public static class BingImgFunction
     {
         private static string bingDailyImgApi = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN";
 
