@@ -26,10 +26,18 @@ namespace Api
             if (!string.IsNullOrEmpty(requestBody) && requestBody.Contains("data:") && requestBody.Contains("base64"))
             {
                 byte[] b = Convert.FromBase64String(requestBody.Split(',')[1]);
+                try
+                {
+                    var responseMessage = await new UpYunClient().WriteFileAsync("/" + Guid.NewGuid().ToString() + ".jpg", b, true);
 
-                var responseMessage = await new UpYunClient().WriteFileAsync("/" + Guid.NewGuid().ToString() + ".jpg", b, true);
+                    return new OkObjectResult(responseMessage);
+                }
+                catch (Exception ex)
+                {
 
-                return new OkObjectResult(responseMessage);
+                    return new OkObjectResult(ex.ToString());
+                }
+               
             }
 
             //dynamic data = JsonConvert.DeserializeObject(requestBody);

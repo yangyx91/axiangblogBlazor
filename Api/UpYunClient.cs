@@ -54,7 +54,7 @@ namespace Api
             using (HttpClient httpClient = new HttpClient(handler))
             using (ByteArrayContent byteContent = new ByteArrayContent(postData))
             {
-                httpClient.BaseAddress = new Uri("http://" + api_domain);
+                httpClient.BaseAddress = new Uri("https://" + api_domain);
                 var value = Convert.ToBase64String(new System.Text.ASCIIEncoding().GetBytes(this.username + ":" + this.password));
                 httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", value);
 
@@ -108,8 +108,8 @@ namespace Api
             long size;
             using (HttpClientHandler handler = new HttpClientHandler { UseProxy = false })
             using (HttpClient httpClient = new HttpClient(handler))
-            {
-                httpClient.BaseAddress = new Uri("http://" + api_domain);
+            { 
+                httpClient.BaseAddress = new Uri("https://" + api_domain);
                 var value = Convert.ToBase64String(new System.Text.ASCIIEncoding().GetBytes(this.username + ":" + this.password));
                 httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", value);
                 HttpResponseMessage resp = await httpClient.GetAsync(DL + this.bucketname + url + "?usage");
