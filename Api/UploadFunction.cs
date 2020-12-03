@@ -16,22 +16,21 @@ namespace Api
     {
         [FunctionName("UploadFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "uploadImg")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "uploadImg")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            if (!string.IsNullOrEmpty(requestBody)&&requestBody.Contains("data:")&&requestBody.Contains("base64"))
-            {
-                byte[] b = Convert.FromBase64String(requestBody.Split(',')[1]);
+            //if (!string.IsNullOrEmpty(requestBody)&&requestBody.Contains("data:")&&requestBody.Contains("base64"))
+            //{
+            //    byte[] b = Convert.FromBase64String(requestBody.Split(',')[1]);
 
-                var responseMessage = await new UpYunClient().WriteFileAsync("/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString()+ ".jpg", b,true);
+            //    var responseMessage = await new UpYunClient().WriteFileAsync("/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString()+ ".jpg", b,true);
 
-                return new OkObjectResult(responseMessage);
-            }
+            //    return new OkObjectResult(responseMessage);
+            //}
 
             //dynamic data = JsonConvert.DeserializeObject(requestBody);
             //name = name ?? data?.name;
