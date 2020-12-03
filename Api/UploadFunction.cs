@@ -24,16 +24,22 @@ namespace Api
             string name = req.Query["name"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            if (!string.IsNullOrEmpty(requestBody)&&requestBody.Contains("data:")&&requestBody.Contains("base64"))
+            {
+                byte[] b = Convert.FromBase64String(requestBody.Split(',')[1]);
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                var responseMessage = await new UpYunClient().WriteFileAsync("/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString()+ ".jpg", b,true);
 
-            var usage=await new UpYunClient().GetBucketUsageAsync();
+                return new OkObjectResult(responseMessage);
+            }
 
-            return new OkObjectResult(usage);
+            //dynamic data = JsonConvert.DeserializeObject(requestBody);
+            //name = name ?? data?.name;
+
+            //string responseMessage = string.IsNullOrEmpty(name)
+            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+            //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            return new OkObjectResult(requestBody);
         }
     }
 }
