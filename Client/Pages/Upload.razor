@@ -26,7 +26,7 @@
     </div>
 }
 
-<p>UpYun可用空间：@upYunBucketUsage</p>
+<p>UpYun可用空间：@upYunBucketUsage<button class="btn btn-primary" @onclick="GetUpYunBucket">查询</button></p>
 
 @code {
 
@@ -60,7 +60,18 @@
         var a = imageDataUrls[0];
         var uploadResult = await http.PostAsJsonAsync<string>("api/uploadImg",a);
 
-        //upYunBucketUsage = await http.GetFromJsonAsync<long>("api/uploadImg");
-        
+        var res=await uploadResult.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrEmpty(res) && res.Contains("https://"))
+        {
+            imageDataUrls[0] = res;
+        }
+
+
+    }
+
+    private async Task GetUpYunBucket()
+    {
+        upYunBucketUsage = await http.GetFromJsonAsync<long>("api/upYunUsage");
     }
 }

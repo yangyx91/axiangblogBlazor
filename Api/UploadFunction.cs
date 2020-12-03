@@ -12,6 +12,9 @@ using System.Net.Http;
 
 namespace Api
 {
+    /// <summary>
+    /// Õª×ÔUpYun.NETCore https://github.com/yangzhongke/UpYun.NETCore
+    /// </summary>
     public static class UploadFunction
     {
         private static readonly string bucketname = "axiang";
@@ -23,7 +26,7 @@ namespace Api
 
         [FunctionName("UploadFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "uploadImg")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "uploadImg")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
