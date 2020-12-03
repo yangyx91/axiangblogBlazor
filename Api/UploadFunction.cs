@@ -14,6 +14,13 @@ namespace Api
 {
     public static class UploadFunction
     {
+        private static readonly string bucketname = "axiang";
+        private static readonly string username = "apiupload";
+        private static readonly string password = "5PbpHcbYDSn4LAcMdH5lx8bAmKd6ydn0";
+        private static readonly string api_domain = "v0.api.upyun.com";
+        private static readonly string bucketDomain = "https://pan.axiangblog.com";
+        private static readonly string DL = "/";
+
         [FunctionName("UploadFunction")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "uploadImg")] HttpRequest req,
@@ -25,12 +32,36 @@ namespace Api
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             if (!string.IsNullOrEmpty(requestBody) && requestBody.Contains("data:") && requestBody.Contains("base64"))
             {
-                byte[] b = Convert.FromBase64String(requestBody.Split(',')[1]);
+                byte[] postData = Convert.FromBase64String(JsonConvert.DeserializeObject<string>(requestBody).Split(',')[1]);
                 try
                 {
-                    var responseMessage = await new UpYunClient().WriteFileAsync("/" + Guid.NewGuid().ToString() + ".jpg", b, true);
+                    using (HttpClientHandler handler = new HttpClientHandler { UseProxy = false })
+                    using (HttpClient httpClient = new HttpClient(handler))
+                    using (ByteArrayContent byteContent = new ByteArrayContent(postData)) 
+                    {
+                        httpClient.BaseAddress = new Uri("https://" + api_domain);
+                        var value = Convert.ToBase64String(new System.Text.ASCIIEncoding().GetBytes(username + ":" + password));
+                        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", value);
+                        string path = "/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString()+".jpg";
+                        string Url = DL + bucketname + path;
+                        HttpResponseMessage responseMsg = await httpClient.PostAsync(Url, byteContent);
+                       
+                        var tmp_infos = new Dictionary<string, object>();
+                        foreach (var header in responseMsg.Headers)
+                        {
+                            if (header.Key.Length > 7 && header.Key.Substring(0, 7) == "x-upyun")
+                            {
+                                tmp_infos.Add(header.Key, header.Value);
+                            }
+                        }
 
-                    return new OkObjectResult(responseMessage);
+                        if (responseMsg!=null&&responseMsg.StatusCode == System.Net.HttpStatusCode.OK)
+                        {
+                            return new OkObjectResult(bucketDomain + path);
+                        }
+                        return new OkObjectResult(responseMsg);
+
+                    }
                 }
                 catch (Exception ex)
                 {
