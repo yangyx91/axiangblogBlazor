@@ -65,13 +65,37 @@
         if (!string.IsNullOrEmpty(res) && res.Contains("https://"))
         {
             imageDataUrls[0] = res;
+
+            var logRes=await http.PostAsJsonAsync<LogDocument>("api/logger", new LogDocument()
+            {
+                id = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                LogId = DateTime.Now.ToString("yyyyMMddHHmmss"),
+                LogDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                Creator = "upload",
+                LogLevel = "LogInfo",
+                LogInfo = string.Format("imageName:{0},imageUrl:{1}", imageName,res),
+                LogDebug = "",
+                LogError = ""
+            });
         }
-
-
     }
 
     private async Task GetUpYunBucket()
     {
         upYunBucketUsage = await http.GetFromJsonAsync<long>("api/upYunUsage");
+    }
+
+    public class LogDocument
+    {
+        public string id { get; set; }
+
+        public string rev { get; set; }
+        public string LogId { get; set; }
+        public string LogDate { get; set; }
+        public string LogLevel { get; set; }
+        public string LogInfo { get; set; }
+        public string LogDebug { get; set; }
+        public string LogError { get; set; }
+        public string Creator { get; set; }
     }
 }
