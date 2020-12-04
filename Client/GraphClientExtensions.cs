@@ -52,7 +52,7 @@ internal static class GraphClientExtensions
                 new AccessTokenRequestOptions()
                 {
                    //Scopes = { STRING ARRAY OF SCOPES }
-                   Scopes= new[]{ "https://graph.microsoft.com/User.Read", "https://graph.microsoft.com/User.Read.All", "https://graph.microsoft.com/User.ReadWrite.All", "https://graph.microsoft.com/Mail.Send" }
+                   Scopes= new[]{ "profile", "openid", "https://graph.microsoft.com/User.Read", "https://graph.microsoft.com/User.Read.All", "https://graph.microsoft.com/User.ReadWrite.All", "https://graph.microsoft.com/Mail.Send" }
                 });
 
             if (result.TryGetToken(out var token))
