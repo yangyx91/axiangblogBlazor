@@ -40,12 +40,12 @@
     {
         var maxAllowedFiles = 1;
         long maxFileSize = 1024 * 1024 * 15;
-        var format = "image/jpg";
 
         foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
         {
+            var format = imageFile.ContentType;
             var resizedImageFile = await imageFile.RequestImageFileAsync(format,
-            600, 400);
+        600, 400);
             var buffer = new byte[resizedImageFile.Size];
             await resizedImageFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
             var imageDataUrl =

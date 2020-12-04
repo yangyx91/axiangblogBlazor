@@ -35,7 +35,9 @@ namespace Api
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             if (!string.IsNullOrEmpty(requestBody) && requestBody.Contains("data:") && requestBody.Contains("base64"))
             {
-                byte[] postData = Convert.FromBase64String(JsonConvert.DeserializeObject<string>(requestBody).Split(',')[1]);
+                var base64Array = JsonConvert.DeserializeObject<string>(requestBody).Split(',');
+                var format = base64Array[0].Split(";")[0].Split(":")[1];
+                byte[] postData = Convert.FromBase64String(base64Array[1]);
                 try
                 {
                     using (HttpClientHandler handler = new HttpClientHandler { UseProxy = false })
@@ -45,7 +47,7 @@ namespace Api
                         httpClient.BaseAddress = new Uri("https://" + api_domain);
                         var value = Convert.ToBase64String(new System.Text.ASCIIEncoding().GetBytes(username + ":" + password));
                         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", value);
-                        string path = "/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString()+".jpg";
+                        string path = "/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString()+"."+ format.Split("/")[1];
                         string Url = DL + bucketname + path;
                         HttpResponseMessage responseMsg = await httpClient.PostAsync(Url, byteContent);
                        
