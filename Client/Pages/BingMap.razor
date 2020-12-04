@@ -1,0 +1,15 @@
+﻿@page "/loadmap"
+@inject IJSRuntime Js
+
+<div id="myMap" style='position:relative;width:600px;height:400px;'></div>
+<button type="button" class="btn btn-primary" @onclick="LoadBingMap">
+    LoadMap
+</button>
+
+@code {
+
+    private async Task LoadBingMap()
+    {
+        await Js.InvokeVoidAsync("GetMap");
+    }
+}

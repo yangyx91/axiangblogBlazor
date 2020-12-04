@@ -1,14 +1,19 @@
 ﻿@page "/upload"
 @using Microsoft.AspNetCore.Authorization
-
+@using Microsoft.Graph
 @inject HttpClient http
 @attribute [Authorize]
+@inject GraphServiceClient GraphClient
 
 <h3>Upload PNG images</h3>
 
-<p>
-    <InputFile OnChange="@OnInputFileChange" multiple />
-</p>
+@if (user != null)
+{
+    <p>
+        <InputFile OnChange="@OnInputFileChange" multiple />
+    </p>
+}
+
 
 @if (imageDataUrls.Count > 0)
 {
@@ -18,6 +23,7 @@
         <div class="card-body">
             @foreach (var imageDataUrl in imageDataUrls)
             {
+                <p>User:@user.UserPrincipalName</p>
                 <p>Name:@imageName</p>
                 <img class="rounded m-1" src="@imageDataUrl" />
                 <button class="btn btn-primary" @onclick="UploadImg">Upload Img</button>
@@ -32,9 +38,17 @@
 
     private string imageName;
 
-    private long upYunBucketUsage=0;
+    private long upYunBucketUsage = 0;
 
     private IList<string> imageDataUrls = new List<string>();
+
+    private User user;
+
+    protected async override Task OnInitializedAsync()
+    {
+        var request = GraphClient.Me.Request();
+        user = await request.GetAsync();
+    }
 
     private async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
@@ -58,22 +72,22 @@
     private async Task UploadImg()
     {
         var a = imageDataUrls[0];
-        var uploadResult = await http.PostAsJsonAsync<string>("api/uploadImg",a);
+        var uploadResult = await http.PostAsJsonAsync<string>("api/uploadImg", a);
 
-        var res=await uploadResult.Content.ReadAsStringAsync();
+        var res = await uploadResult.Content.ReadAsStringAsync();
 
         if (!string.IsNullOrEmpty(res) && res.Contains("https://"))
         {
             imageDataUrls[0] = res;
 
-            var logRes=await http.PostAsJsonAsync<LogDocument>("api/logger", new LogDocument()
+            var logRes = await http.PostAsJsonAsync<LogDocument>("api/logger", new LogDocument()
             {
                 id = DateTime.Now.ToString("yyyyMMddHHmmss"),
                 LogId = DateTime.Now.ToString("yyyyMMddHHmmss"),
                 LogDate = DateTime.Now.ToString("yyyy-MM-dd"),
                 Creator = "upload",
-                LogLevel = "LogInfo",
-                LogInfo = string.Format("imageName:{0},imageUrl:{1}", imageName,res),
+                LogLevel = "Info",
+                LogInfo = string.Format("imageName:{0},imageUrl:{1},user:{2}", imageName, res,user.UserPrincipalName),
                 LogDebug = "",
                 LogError = ""
             });

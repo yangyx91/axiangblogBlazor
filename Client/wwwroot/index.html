@@ -59,6 +59,16 @@
     </div>
     <script src="_content/Microsoft.Authentication.WebAssembly.Msal/AuthenticationService.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Av7NiY03EplXG-Hm49s8d-oTSC1nkveo3W0aQ42P2xTVF1qzrWi2Zxk5Wby5-Qzs&setMkt=zh-CN&setLang=zh&UR=CN&branch=release" async defer></script>
+    <script type='text/javascript'>
+        function GetMap() {
+            var map = new Microsoft.Maps.Map('#myMap', {
+                zoom: 10
+            });
+            console.log(map);
+            //Add your post map load code here.
+        }
+    </script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 

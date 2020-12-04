@@ -4,6 +4,7 @@
 @attribute [Authorize]
 @inject GraphServiceClient GraphClient
 
+
 <h3>Graph Client Example</h3>
 
 @if (user != null)
@@ -22,4 +23,6 @@
         var request = GraphClient.Me.Request();
         user = await request.GetAsync();
     }
+
+    
 }
