@@ -19,7 +19,7 @@ namespace Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-            builder.Services.AddGraphClient("https://graph.microsoft.com/User.Read");
+            builder.Services.AddGraphClient("https://graph.microsoft.com/User.Read", "https://graph.microsoft.com/User.Read.All", "https://graph.microsoft.com/User.ReadWrite.All", "https://graph.microsoft.com/Mail.Send");
 
             //¼¯³ÉÎ¢ÈíÕË»§Authentication
             builder.Services.AddMsalAuthentication(options =>
