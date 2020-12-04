@@ -13,16 +13,41 @@
     <p>UserPrincipalName: @user.UserPrincipalName</p>
     <p>DisplayName: @user.DisplayName</p>
     <p>Mail: @user.Mail</p>
+    <button class="btn btn-primary" @onclick="WelcomeMail">Send Welcome Mail</button>
 }
 
 @code {
-    private User user;
+            private User user;
 
-    protected async override Task OnInitializedAsync()
-    {
-        var request = GraphClient.Me.Request();
-        user = await request.GetAsync();
-    }
+            protected async override Task OnInitializedAsync()
+            {
+                var request = GraphClient.Me.Request();
+                user = await request.GetAsync();
+            }
 
-    
+            private async Task WelcomeMail()
+            {
+                var message = new Message
+                {
+                    Subject = "用户登录站点提醒",
+                    Body = new ItemBody
+                    {
+                        ContentType = BodyType.Text,
+                        Content = string.Format("当前用户名:{0},登陆时间：{1}",user.UserPrincipalName,DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
+                    },
+                    ToRecipients = new List<Recipient>()
+                    {
+                        new Recipient
+                        {
+                            EmailAddress = new EmailAddress
+                            {
+                                Address = "yang@axiangblog.com"
+                            }
+                        }
+                    }
+                };
+
+                    var request = GraphClient.Me.SendMail(message,false).Request();
+                    await request.PostAsync();
+            }
 }
