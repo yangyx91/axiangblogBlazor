@@ -79,12 +79,12 @@
         if (!string.IsNullOrEmpty(res) && res.Contains("https://"))
         {
             imageDataUrls[0] = res;
-
+            var currentDateTime=TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TZConvert.GetTimeZoneInfo("Asia/Shanghai"));
             var logRes = await http.PostAsJsonAsync<LogDocument>("api/logger", new LogDocument()
             {
-                id = DateTime.Now.ToString("yyyyMMddHHmmss"),
-                LogId = DateTime.Now.ToString("yyyyMMddHHmmss"),
-                LogDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                id = currentDateTime.ToString("yyyyMMddHHmmss"),
+                LogId = currentDateTime.ToString("yyyyMMddHHmmss"),
+                LogDate = currentDateTime.ToString("yyyy-MM-dd"),
                 Creator = "upload",
                 LogLevel = "Info",
                 LogInfo = string.Format("imageName:{0},imageUrl:{1},user:{2}", imageName, res,user.UserPrincipalName),

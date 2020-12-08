@@ -8,8 +8,9 @@
 
 @code {
 
-    private async Task LoadBingMap()
+    private void LoadBingMap()
     {
-        await Js.InvokeVoidAsync("GetMap");
+        var newJs = (IJSInProcessRuntime)Js;
+        newJs.InvokeVoid("GetMap");
     }
 }
