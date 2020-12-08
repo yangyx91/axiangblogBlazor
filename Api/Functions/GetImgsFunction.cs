@@ -51,7 +51,7 @@ namespace Api.Functions
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
 
-                var response = await client.GetAsync(_dbName);
+                var response = await client.GetAsync(_dbName + "/_all_docs?include_docs=true");
                 if (response.IsSuccessStatusCode)
                 {
                     var responseJson = await response.Content.ReadAsStringAsync();

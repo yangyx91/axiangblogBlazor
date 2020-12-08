@@ -84,6 +84,7 @@
             var currentDateTime=TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TZConvert.GetTimeZoneInfo("Asia/Shanghai"));
 
             await http.PostAsJsonAsync<ImgDocument>("api/addImg", new ImgDocument(){
+                id= currentDateTime.ToString("yyyyMMddHHmmss"),
                 ImgId = currentDateTime.ToString("yyyyMMddHHmmss"),
                 Name=imageName,
                 UpyunPath=res,
