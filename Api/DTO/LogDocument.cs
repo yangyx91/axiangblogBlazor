@@ -10,11 +10,10 @@ namespace Api.DTO
 
         public string rev { get; set; }
         public string LogId { get; set; }
-        public string LogDate { get; set; }
+        public string LogEvent { get; set; }
         public string LogLevel { get; set; }
-        public string LogInfo { get; set; }
-        public string LogDebug { get; set; }
-        public string LogError { get; set; } 
+        public string LogMsg { get; set; }
+        public string LogDate { get; set; }
         public string Creator { get; set; }
     }
 

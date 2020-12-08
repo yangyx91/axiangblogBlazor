@@ -29,7 +29,7 @@ namespace Api
             return System.Text.Json.JsonSerializer.Deserialize<BingImgResponse>(result).images.FirstOrDefault();
         }
 
-        [FunctionName("Function1")]
+        [FunctionName("BingImgFunction")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "todayBingImg")] HttpRequest req,
             ILogger log)

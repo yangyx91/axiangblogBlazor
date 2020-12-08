@@ -47,7 +47,7 @@ namespace Api
                         httpClient.BaseAddress = new Uri("https://" + api_domain);
                         var value = Convert.ToBase64String(new System.Text.ASCIIEncoding().GetBytes(username + ":" + password));
                         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", value);
-                        string path = "/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString()+"."+ format.Split("/")[1];
+                        string path = "/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString("N")+"."+ format.Split("/")[1];
                         string Url = DL + bucketname + path;
                         HttpResponseMessage responseMsg = await httpClient.PostAsync(Url, byteContent);
                        
@@ -62,7 +62,7 @@ namespace Api
 
                         if (responseMsg!=null&&responseMsg.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            return new OkObjectResult(bucketDomain + path);
+                            return new OkObjectResult(path);
                         }
                         return new OkObjectResult(responseMsg);
 

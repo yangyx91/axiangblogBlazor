@@ -7,25 +7,24 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Api.DTO;
 using System.Net.Http;
 using System.Text;
 using System.Net.Http.Headers;
 
-namespace Api
+namespace Api.Functions
 {
-    public static class LogFunction 
+    public static class AddImgFunction
     {
-        private static readonly string _dbName = "apilogdb";  //imgdb
+        private static readonly string _dbName = "imgdb";
         private static readonly string username = "a208c9f8-c877-4399-86c0-fc1675cee12e-bluemix";
         private static readonly string password = "2e9f799f8f9a467c91612c72bcacf2d600757afd461292a7b4ac38ddd28cdb78";
         private static readonly string host = "a208c9f8-c877-4399-86c0-fc1675cee12e-bluemix.cloudantnosqldb.appdomain.cloud";
         private static readonly string apikey = "QAIv6jfw4a39voYb6aaS5z6Ty-0Av4slPWqOoE83qZ1g";
         private static readonly string port = "443";
 
-        [FunctionName("LogFunction")]
+        [FunctionName("AddImgFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "logger")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "addImg")] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
