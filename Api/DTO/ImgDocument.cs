@@ -8,12 +8,12 @@ namespace Api.DTO
     {
         public string id { get; set; }
         public string rev { get; set; }
-        public string ImgId { get; set; }
-        public string Name { get; set; }
-        public string UpyunPath { get; set; }
-        public string Url { get; set; }
-        public string UserId { get; set; }
-        public string Creator { get; set; }
+        public string imgId { get; set; }
+        public string name { get; set; }
+        public string upyunPath { get; set; }
+        public string url { get; set; }
+        public string userId { get; set; }
+        public string creator { get; set; }
     }
 
     public class QueryImgDocumentResult
