@@ -25,13 +25,8 @@ namespace Api
 
         [FunctionName("BucketUsageFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "upYunUsage")] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "upYunUsage")] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
-
             long size;
             using (HttpClientHandler handler = new HttpClientHandler { UseProxy = false })
             using (HttpClient httpClient = new HttpClient(handler))
@@ -40,14 +35,26 @@ namespace Api
                 var value = Convert.ToBase64String(new System.Text.ASCIIEncoding().GetBytes(username + ":" + password));
                 httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", value);
                 HttpResponseMessage resp = await httpClient.GetAsync(DL + bucketname + "/" + "?usage");
-                try
+
+                if (resp.IsSuccessStatusCode)
                 {
                     string strhtml = await resp.Content.ReadAsStringAsync();
                     size = long.Parse(strhtml);
+                    new ApiLogger("GetImgsFunction").LogInformation(strhtml, new
+                    {
+                        BaseAddress = httpClient.BaseAddress,
+                        RequestUri = DL + bucketname + "/" + "?usage"
+                    });
                 }
-                catch (Exception)
+                else
                 {
                     size = 0;
+                    string msg = "Failure to Get. Status Code: " + resp.StatusCode + ". Reason: " + resp.ReasonPhrase;
+                    new ApiLogger("GetImgsFunction").LogError(msg, new
+                    {
+                        BaseAddress = httpClient.BaseAddress,
+                        RequestUri = DL + bucketname + "/" + "?usage"
+                    });
                 }
             }
 

@@ -25,28 +25,30 @@ namespace Api
             if (responseMessage.IsSuccessStatusCode)
             {
                 result = await responseMessage.Content.ReadAsStringAsync();
+                new ApiLogger("BingImgFunction").LogInformation(result, new
+                {
+                    BaseAddress = httpClient.BaseAddress,
+                    RequestUri = bingDailyImgApi
+                });
+            }
+            else
+            {
+                string msg = "Failure to POST. Status Code: " + responseMessage.StatusCode + ". Reason: " + responseMessage.ReasonPhrase;
+                new ApiLogger("BingImgFunction").LogError(msg, new
+                {
+                    BaseAddress = httpClient.BaseAddress,
+                    RequestUri = bingDailyImgApi
+                });
+                return new BingImg();
             }
             return System.Text.Json.JsonSerializer.Deserialize<BingImgResponse>(result).images.FirstOrDefault();
         }
 
         [FunctionName("BingImgFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "todayBingImg")] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "todayBingImg")] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
-
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
             var bingImg = await GetBingImgAsync();
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
             return new OkObjectResult(bingImg);
         }
     }

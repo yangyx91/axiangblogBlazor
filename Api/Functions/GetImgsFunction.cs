@@ -25,23 +25,8 @@ namespace Api.Functions
 
         [FunctionName("GetImgsFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route ="allimgs")] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route ="allimgs")] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
-
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
-
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            // : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
-            //return new OkObjectResult(responseMessage);
-
             using (HttpClientHandler handler = new HttpClientHandler { UseProxy = false })
             using (var client = new HttpClient())
             {
@@ -50,16 +35,26 @@ namespace Api.Functions
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", auth);
-
-                var response = await client.GetAsync(_dbName + "/_all_docs?include_docs=true");
+                //引用分页模块：https://blog.cloudant.com/2019/10/25/Paginating-all_docs-and-views.html
+                var response = await client.GetAsync(_dbName + "/_all_docs?include_docs=true&limit=11");
                 if (response.IsSuccessStatusCode)
                 {
                     var responseJson = await response.Content.ReadAsStringAsync();
+                    new ApiLogger("GetImgsFunction").LogInformation(responseJson, new
+                    {
+                        BaseAddress = client.BaseAddress,
+                        RequestUri = _dbName + "/_all_docs?include_docs=true&limit=11"
+                    });
                     return new OkObjectResult(System.Text.Json.JsonSerializer.Deserialize<QueryImgDocumentResult>(responseJson));
                 }
                 else
                 {
                     string msg = "Failure to Get. Status Code: " + response.StatusCode + ". Reason: " + response.ReasonPhrase;
+                    new ApiLogger("GetImgsFunction").LogError(msg, new
+                    {
+                        BaseAddress = client.BaseAddress,
+                        RequestUri = _dbName + "/_all_docs?include_docs=true&limit=11"
+                    });
                     return new OkObjectResult(msg);
                 }
             }

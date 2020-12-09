@@ -24,13 +24,8 @@ namespace Api.Functions
 
         [FunctionName("AddImgFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "addImg")] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "addImg")] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
-
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             if (!string.IsNullOrEmpty(requestBody))
             {
@@ -51,22 +46,25 @@ namespace Api.Functions
                     if (response.IsSuccessStatusCode)
                     {
                         var responseJson = await response.Content.ReadAsStringAsync();
+                        new ApiLogger("AddImgFunction").LogInformation(responseJson,
+                            new {
+                            BaseAddress=client.BaseAddress,
+                            RequestUri= _dbName
+                            });
                         return new OkObjectResult(responseJson);
                     }
                     else
                     {
                         string msg = "Failure to POST. Status Code: " + response.StatusCode + ". Reason: " + response.ReasonPhrase;
+                        new ApiLogger("AddImgFunction").LogError(msg, new
+                        {
+                            BaseAddress = client.BaseAddress,
+                            RequestUri = _dbName
+                        });
                         return new OkObjectResult(msg);
                     }
                 }
             }
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
-
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
-
             return new OkObjectResult("");
         }
     }

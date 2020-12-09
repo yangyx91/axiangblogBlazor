@@ -92,19 +92,6 @@
                 UserId=user.Id,
                 Creator=user.UserPrincipalName
             });
-
-            //var logRes = await http.PostAsJsonAsync<LogDocument>("api/logger", new LogDocument()
-            //{
-            //    id = currentDateTime.ToString("yyyyMMddHHmmss"),
-            //    LogId = currentDateTime.ToString("yyyyMMddHHmmss"),
-            //    LogDate = currentDateTime.ToString("yyyy-MM-dd"),
-            //    Creator = user.UserPrincipalName,
-            //    LogEvent="upload",
-            //    LogLevel = "Info",
-            //    LogInfo = string.Format("imageName:{0},imageUrl:{1},user:{2}", imageName, res,user.UserPrincipalName),
-            //    LogDebug = "",
-            //    LogError = ""
-            //});
         }
     }
 
@@ -112,20 +99,6 @@
     {
         upYunBucketUsage = await http.GetFromJsonAsync<long>("api/upYunUsage");
     }
-
-    public class LogDocument
-    {
-        public string id { get; set; }
-
-        public string rev { get; set; }
-        public string LogId { get; set; }
-        public string LogEvent { get; set; }
-        public string LogLevel { get; set; }
-        public string LogMsg { get; set; }
-        public string LogDate { get; set; }
-        public string Creator { get; set; }
-    }
-
 
     public class ImgDocument
     {

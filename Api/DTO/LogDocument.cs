@@ -7,14 +7,15 @@ namespace Api.DTO
     public class LogDocument
     {
         public string id { get; set; }
-
         public string rev { get; set; }
-        public string LogId { get; set; }
-        public string LogEvent { get; set; }
-        public string LogLevel { get; set; }
-        public string LogMsg { get; set; }
-        public string LogDate { get; set; }
-        public string Creator { get; set; }
+        public string logId { get; set; }
+        public string eventId { get; set; } 
+        public string logLevel { get; set; }
+        public string exception { get; set; }
+        public string message { get; set; }
+        public string args { get; set; }
+        public string logDate { get; set; }
+        public string creator { get; set; }
     }
 
     public class QueryIBMDocumentResult

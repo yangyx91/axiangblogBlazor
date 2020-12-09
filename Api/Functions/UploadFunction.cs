@@ -26,12 +26,8 @@ namespace Api
 
         [FunctionName("UploadFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "uploadImg")] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "uploadImg")] HttpRequest req)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             if (!string.IsNullOrEmpty(requestBody) && requestBody.Contains("data:") && requestBody.Contains("base64"))
             {
@@ -50,7 +46,6 @@ namespace Api
                         string path = "/"+DateTime.Now.ToString("yyyyMMdd")+"/"+Guid.NewGuid().ToString("N")+"."+ format.Split("/")[1];
                         string Url = DL + bucketname + path;
                         HttpResponseMessage responseMsg = await httpClient.PostAsync(Url, byteContent);
-                       
                         var tmp_infos = new Dictionary<string, object>();
                         foreach (var header in responseMsg.Headers)
                         {
@@ -62,7 +57,21 @@ namespace Api
 
                         if (responseMsg!=null&&responseMsg.StatusCode == System.Net.HttpStatusCode.OK)
                         {
+                            new ApiLogger("UploadFunction").LogInformation(await responseMsg.Content.ReadAsStringAsync(), new
+                            {
+                                BaseAddress = httpClient.BaseAddress,
+                                RequestUri = Url
+                            });
                             return new OkObjectResult(path);
+                        }
+                        else
+                        {
+                            string msg = "Failure to POST. Status Code: " + responseMsg.StatusCode + ". Reason: " + responseMsg.ReasonPhrase;
+                            new ApiLogger("UploadFunction").LogError(msg, new
+                            {
+                                BaseAddress = httpClient.BaseAddress,
+                                RequestUri = Url
+                            });
                         }
                         return new OkObjectResult(responseMsg);
 
@@ -75,13 +84,6 @@ namespace Api
                 }
                
             }
-
-            //dynamic data = JsonConvert.DeserializeObject(requestBody);
-            //name = name ?? data?.name;
-
-            //string responseMessage = string.IsNullOrEmpty(name)
-            //    ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-            //    : $"Hello, {name}. This HTTP triggered function executed successfully.";
             return new OkObjectResult(requestBody);
         }
     }
