@@ -46,7 +46,7 @@ namespace Api.Functions
                     if (response.IsSuccessStatusCode)
                     {
                         var responseJson = await response.Content.ReadAsStringAsync();
-                        new ApiLogger("AddImgFunction").LogInformation(responseJson,
+                        await new ApiLogger("AddImgFunction").LogInformation(responseJson,
                             new {
                             BaseAddress=client.BaseAddress,
                             RequestUri= _dbName
@@ -56,7 +56,7 @@ namespace Api.Functions
                     else
                     {
                         string msg = "Failure to POST. Status Code: " + response.StatusCode + ". Reason: " + response.ReasonPhrase;
-                        new ApiLogger("AddImgFunction").LogError(msg, new
+                        await new ApiLogger("AddImgFunction").LogError(msg, new
                         {
                             BaseAddress = client.BaseAddress,
                             RequestUri = _dbName

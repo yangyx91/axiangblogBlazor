@@ -40,7 +40,7 @@ namespace Api.Functions
                 if (response.IsSuccessStatusCode)
                 {
                     var responseJson = await response.Content.ReadAsStringAsync();
-                    new ApiLogger("GetImgsFunction").LogInformation(responseJson, new
+                    await new ApiLogger("GetImgsFunction").LogInformation(responseJson, new
                     {
                         BaseAddress = client.BaseAddress,
                         RequestUri = _dbName + "/_all_docs?include_docs=true&limit=11"
@@ -50,7 +50,7 @@ namespace Api.Functions
                 else
                 {
                     string msg = "Failure to Get. Status Code: " + response.StatusCode + ". Reason: " + response.ReasonPhrase;
-                    new ApiLogger("GetImgsFunction").LogError(msg, new
+                    await new ApiLogger("GetImgsFunction").LogError(msg, new
                     {
                         BaseAddress = client.BaseAddress,
                         RequestUri = _dbName + "/_all_docs?include_docs=true&limit=11"

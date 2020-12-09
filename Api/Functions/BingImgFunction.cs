@@ -25,7 +25,7 @@ namespace Api
             if (responseMessage.IsSuccessStatusCode)
             {
                 result = await responseMessage.Content.ReadAsStringAsync();
-                new ApiLogger("BingImgFunction").LogInformation(result, new
+                await new ApiLogger("BingImgFunction").LogInformation(result, new
                 {
                     BaseAddress = httpClient.BaseAddress,
                     RequestUri = bingDailyImgApi
@@ -34,7 +34,7 @@ namespace Api
             else
             {
                 string msg = "Failure to POST. Status Code: " + responseMessage.StatusCode + ". Reason: " + responseMessage.ReasonPhrase;
-                new ApiLogger("BingImgFunction").LogError(msg, new
+                await new ApiLogger("BingImgFunction").LogError(msg, new
                 {
                     BaseAddress = httpClient.BaseAddress,
                     RequestUri = bingDailyImgApi

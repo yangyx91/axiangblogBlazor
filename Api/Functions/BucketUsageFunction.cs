@@ -40,7 +40,7 @@ namespace Api
                 {
                     string strhtml = await resp.Content.ReadAsStringAsync();
                     size = long.Parse(strhtml);
-                    new ApiLogger("GetImgsFunction").LogInformation(strhtml, new
+                    await new ApiLogger("GetImgsFunction").LogInformation(strhtml, new
                     {
                         BaseAddress = httpClient.BaseAddress,
                         RequestUri = DL + bucketname + "/" + "?usage"
@@ -50,7 +50,7 @@ namespace Api
                 {
                     size = 0;
                     string msg = "Failure to Get. Status Code: " + resp.StatusCode + ". Reason: " + resp.ReasonPhrase;
-                    new ApiLogger("GetImgsFunction").LogError(msg, new
+                    await new ApiLogger("GetImgsFunction").LogError(msg, new
                     {
                         BaseAddress = httpClient.BaseAddress,
                         RequestUri = DL + bucketname + "/" + "?usage"

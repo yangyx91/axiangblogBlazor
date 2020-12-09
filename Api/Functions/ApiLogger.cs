@@ -41,9 +41,9 @@ namespace Api
             CurrentMethodName = methodName;
         } 
 
-        public void LogDebug(Exception exception, string message, params object[] args)
+        public async Task LogDebug(Exception exception, string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -56,9 +56,9 @@ namespace Api
             }); 
         }
 
-        public void LogDebug(string message, params object[] args)
+        public async Task LogDebug(string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -71,9 +71,9 @@ namespace Api
             });
         }
 
-        public void LogTrace(Exception exception, string message, params object[] args)
+        public async Task LogTrace(Exception exception, string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -87,9 +87,9 @@ namespace Api
         }
 
 
-        public void LogTrace(string message, params object[] args)
+        public async Task LogTrace(string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -102,9 +102,9 @@ namespace Api
             });
         }
 
-        public void LogInformation(Exception exception, string message, params object[] args)
+        public async Task LogInformation(Exception exception, string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -118,9 +118,9 @@ namespace Api
         }
 
 
-        public void LogInformation(string message, params object[] args)
+        public async Task LogInformation(string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -133,9 +133,9 @@ namespace Api
             });
         }
 
-        public void LogWarning(Exception exception, string message, params object[] args)
+        public async Task LogWarning(Exception exception, string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -149,9 +149,9 @@ namespace Api
         }
 
 
-        public void LogWarning(string message, params object[] args)
+        public async Task LogWarning(string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -164,9 +164,9 @@ namespace Api
             });
         }
 
-        public void LogError(Exception exception, string message, params object[] args)
+        public async Task LogError(Exception exception, string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -180,9 +180,9 @@ namespace Api
         }
 
 
-        public void LogError(string message, params object[] args)
+        public async Task LogError(string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -195,9 +195,9 @@ namespace Api
             });
         }
 
-        public void LogCritical(Exception exception, string message, params object[] args)
+        public async Task LogCritical(Exception exception, string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -211,9 +211,9 @@ namespace Api
         }
 
 
-        public void LogCritical(string message, params object[] args)
+        public async Task LogCritical(string message, object args)
         {
-            Info(new LogDocument()
+            await Info(new LogDocument()
             {
                 logId = this.LogId,
                 eventId = this.EventId,
@@ -226,7 +226,7 @@ namespace Api
             });
         }
 
-        private static void Info(LogDocument log)  
+        private static async Task Info(LogDocument log)  
         {
             if (username == null || password == null || host == null)
             {
@@ -244,7 +244,7 @@ namespace Api
                         System.Text.Json.JsonSerializer.Serialize(log),
                         Encoding.UTF8,
                         "application/json");
-                client.PostAsync(_dbName, todoItemJson);
+                await client.PostAsync(_dbName, todoItemJson);
                 //if (response.IsSuccessStatusCode)
                 //{
                     //var responseJson = await response.Content.ReadAsStringAsync();

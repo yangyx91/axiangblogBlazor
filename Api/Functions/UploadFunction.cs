@@ -57,7 +57,7 @@ namespace Api
 
                         if (responseMsg!=null&&responseMsg.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            new ApiLogger("UploadFunction").LogInformation(await responseMsg.Content.ReadAsStringAsync(), new
+                            await new ApiLogger("UploadFunction").LogInformation(await responseMsg.Content.ReadAsStringAsync(), new
                             {
                                 BaseAddress = httpClient.BaseAddress,
                                 RequestUri = Url
@@ -67,7 +67,7 @@ namespace Api
                         else
                         {
                             string msg = "Failure to POST. Status Code: " + responseMsg.StatusCode + ". Reason: " + responseMsg.ReasonPhrase;
-                            new ApiLogger("UploadFunction").LogError(msg, new
+                            await new ApiLogger("UploadFunction").LogError(msg, new
                             {
                                 BaseAddress = httpClient.BaseAddress,
                                 RequestUri = Url
