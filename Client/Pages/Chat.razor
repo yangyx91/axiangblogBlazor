@@ -2,8 +2,8 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Graph
 @using Microsoft.AspNetCore.SignalR.Client
-@attribute [Authorize]
-@inject GraphServiceClient GraphClient
+@*@attribute [Authorize]*@
+@*@inject GraphServiceClient GraphClient*@
 @inject HttpClient http
 
 <h1>@hubConnection.State</h1>
@@ -45,8 +45,9 @@
 
     protected override async Task OnInitializedAsync() //actions to do when the page is initialized
     {
-        var request = GraphClient.Me.Request();
-        user = await request.GetAsync();
+        //var request = GraphClient.Me.Request();
+        //user = await request.GetAsync();
+        var user = new { Id="1",Mail="yang.yx@qq.com"};
         @if (user != null)
         {
             userId = user.Id;
@@ -56,7 +57,7 @@
 
         //create a hub connection to the function app as we'll go via the function for everything SignalR.
         hubConnection = new HubConnectionBuilder()
-        .WithUrl("https://orange-wave-0b2b80500.azurestaticapps.net/api")
+        .WithUrl("/api")
         .Build();
 
         //Registers handler that will be invoked when the hub method with the specified method name is invoked.
@@ -75,14 +76,14 @@
 
         var msg = new ClientMessage
         {
-            UID = user.Id,
+            UID ="11",// user.Id,
             Name = userInput,
             Message = messageInput,
             CreateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TZConvert.GetTimeZoneInfo("Asia/Shanghai")).ToString("yyyy-MM-dd HH:mm:ss")
 
         };
 
-        await http.PostAsJsonAsync("api/messages", msg); // post to the function app
+        await http.PostAsJsonAsync("/api/messages", msg); // post to the function app
         messageInput = string.Empty; // clear the message from the textbox
         StateHasChanged(); //update the UI
     }

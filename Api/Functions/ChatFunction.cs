@@ -14,7 +14,7 @@ namespace Api
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [SignalRConnectionInfo(HubName = "chatHub")] SignalRConnectionInfo connectionInfo)
         {
-            return connectionInfo;
+                return connectionInfo;
         }
 
 
