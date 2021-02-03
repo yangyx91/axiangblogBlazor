@@ -8,11 +8,10 @@ namespace Api
 {
     public static class ChatFunction
     {
-
         [FunctionName("negotiate")]
         public static SignalRConnectionInfo Negotiate(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
-            [SignalRConnectionInfo(HubName = "chatHub")] SignalRConnectionInfo connectionInfo)
+            [SignalRConnectionInfo(HubName = "chatHub", ConnectionStringSetting = "Endpoint=https://axiang.service.signalr.net;AccessKey=MTgCKuCikD8m7meYfAph8vsepcbhKQDkvWstz9HQNBA=;Version=1.0;")] SignalRConnectionInfo connectionInfo)
         {
                 return connectionInfo;
         }
@@ -21,7 +20,7 @@ namespace Api
         [FunctionName("messages")]
         public static Task SendMessage(
            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] ClientMessage clientMessage,
-           [SignalR(HubName = "chatHub")] IAsyncCollector<SignalRMessage> signalRMessages)
+           [SignalR(HubName = "chatHub",ConnectionStringSetting = "Endpoint=https://axiang.service.signalr.net;AccessKey=MTgCKuCikD8m7meYfAph8vsepcbhKQDkvWstz9HQNBA=;Version=1.0;")] IAsyncCollector<SignalRMessage> signalRMessages)
         {
             return signalRMessages.AddAsync(
                 new SignalRMessage
