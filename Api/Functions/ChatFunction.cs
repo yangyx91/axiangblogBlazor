@@ -11,7 +11,7 @@ namespace Api
 
         [FunctionName("negotiate")]
         public static SignalRConnectionInfo Negotiate(
-            [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [SignalRConnectionInfo(HubName = "chatHub")] SignalRConnectionInfo connectionInfo)
         {
             return connectionInfo;
@@ -20,7 +20,7 @@ namespace Api
 
         [FunctionName("messages")]
         public static Task SendMessage(
-           [HttpTrigger(AuthorizationLevel.Function, "post")] ClientMessage clientMessage,
+           [HttpTrigger(AuthorizationLevel.Anonymous, "post")] ClientMessage clientMessage,
            [SignalR(HubName = "chatHub")] IAsyncCollector<SignalRMessage> signalRMessages)
         {
             return signalRMessages.AddAsync(
