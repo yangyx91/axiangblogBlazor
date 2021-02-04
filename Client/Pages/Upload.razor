@@ -1,8 +1,9 @@
 ﻿@page "/upload"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Graph
+@using System.IO
 @inject HttpClient http
-@attribute [Authorize]
+@*@attribute [Authorize]*@
 @inject GraphServiceClient GraphClient
 
 <h3>上传本地图片</h3>
@@ -46,29 +47,28 @@
 
     private User user;
 
+    IFileListEntry file;
+
     protected async override Task OnInitializedAsync()
     {
         var request = GraphClient.Me.Request();
         user = await request.GetAsync();
     }
 
-    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    private async Task OnInputFileChange(IFileListEntry[] files)
     {
-        var maxAllowedFiles = 1;
-        long maxFileSize = 1024 * 1024 * 15;
+        file = files.FirstOrDefault();
 
-        foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
+        var buffer = new byte[file.Size];
+        using (MemoryStream ms=new MemoryStream())
         {
-            var format = imageFile.ContentType;
-            var resizedImageFile = await imageFile.RequestImageFileAsync(format,
-        600, 400);
-            var buffer = new byte[resizedImageFile.Size];
-            await resizedImageFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
-            var imageDataUrl =
-                $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-            imageName = imageFile.Name;
-            imageDataUrls.Add(imageDataUrl);
+            file.Data.CopyTo(ms);
+            buffer = ms.ToArray();
         }
+        var imageDataUrl =
+            $"data:{file.Type};base64,{Convert.ToBase64String(buffer)}";
+        imageName = file.Name;
+        imageDataUrls.Add(imageDataUrl);
     }
 
     private async Task UploadImg()

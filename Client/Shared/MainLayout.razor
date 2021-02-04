@@ -1,24 +1,22 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-            <LoginDisplay />
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
+<div class="sidebar">
+    <NavMenu />
 </div>
-<footer>
-    <p style="text-align: center;">© 2020-2021 阿象博客.All rights reserved.</p>
-    <p style="text-align: center;color: #3f2863">Azure静态Web+Cloudflare</p>
-    <p style="text-align: center;color: #3f2863">本网站由<a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank"><img border="0" height="19px" src="upyun_logos/logo.png" alt="又拍云" title="又拍云" /></a>提供CDN加速/云存储服务</p>
-    <p style="text-align: center;color: #3f2863">苏ICP备15012809号-1</p>
-</footer>
+
+<div class="main">
+    <div class="top-row px-4">
+        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+    <footer>
+        <p style="text-align: center;">© 2020-2021 阿象博客.All rights reserved.</p>
+        <p style="text-align: center;color: #3f2863">Azure静态Web+Cloudflare</p>
+        <p style="text-align: center;color: #3f2863">本网站由<a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank"><img border="0" height="19px" src="upyun_logos/logo.png" alt="又拍云" title="又拍云" /></a>提供CDN加速/云存储服务</p>
+        <p style="text-align: center;color: #3f2863">苏ICP备15012809号-1</p>
+    </footer>
+</div>
+

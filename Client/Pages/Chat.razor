@@ -5,6 +5,7 @@
 @*@attribute [Authorize]*@
 @*@inject GraphServiceClient GraphClient*@
 @inject HttpClient http
+@inject NavigationManager navManager
 
 <h1>@hubConnection.State</h1>
 
@@ -55,10 +56,11 @@
 
         }
 
+        //https://orange-wave-0b2b80500.azurestaticapps.net
         //create a hub connection to the function app as we'll go via the function for everything SignalR.
         hubConnection = new HubConnectionBuilder()
-        .WithUrl("https://orange-wave-0b2b80500.azurestaticapps.net/api")
-        .Build();
+    .WithUrl($"{navManager.BaseUri}/api")
+    .Build();
 
         //Registers handler that will be invoked when the hub method with the specified method name is invoked.
         hubConnection.On<ClientMessage>("clientMessage", (clientMessage) =>
@@ -83,7 +85,7 @@
 
         };
 
-        await http.PostAsJsonAsync("https://orange-wave-0b2b80500.azurestaticapps.net/api/messages", msg); // post to the function app
+        await http.PostAsJsonAsync($"{navManager.BaseUri}/api/messages", msg); // post to the function app
         messageInput = string.Empty; // clear the message from the textbox
         StateHasChanged(); //update the UI
     }
