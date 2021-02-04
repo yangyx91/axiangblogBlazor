@@ -1,106 +1,19 @@
 ﻿@page "/chat"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Graph
-@using Microsoft.AspNetCore.SignalR.Client
-@*@attribute [Authorize]*@
-@*@inject GraphServiceClient GraphClient*@
+@attribute [Authorize]
+@inject GraphServiceClient GraphClient
 @inject HttpClient http
-@inject NavigationManager navManager
 
-<h1>@hubConnection.State</h1>
-
-<div class="form-group">
-    <label>
-        User:<input @bind="userInput" />
-    </label>
-</div>
-<div class="form-group">
-    <label>
-        Message:
-        <input @bind="messageInput" size="50" />
-    </label>
-</div>
-<button @onclick="SendAsync" disabled="@(!IsConnected)">Send</button>
-
-<ul id="messagesList">
-    @foreach (var message in messages)
-    {
-        <li>@message.UID</li>
-        <li>@message.Name</li>
-        <li>@message.Message</li>
-        <li>@message.CreateTime</li>
-    }
-</ul>
+<iframe src="https://axiangchat.azurewebsites.net?userId=@user.Id&@user.UserPrincipalName" frameborder="0" style="width: 100%; height: 100%;"></iframe>
 
 @code {
 
     private User user;
 
-    private HubConnection hubConnection; //for connecting to SignalR
-    private List<ClientMessage> messages = new List<ClientMessage>(); //List of messages to display
-    private string userId;
-    private string userInput; //username
-    private string messageInput; //message 
-
-    private readonly string functionAppBaseUri = "http://localhost:7071/api/"; //URL for function app. Leave this as is for now.
-
     protected override async Task OnInitializedAsync() //actions to do when the page is initialized
     {
-        //var request = GraphClient.Me.Request();
-        //user = await request.GetAsync();
-        var user = new { Id="1",Mail="yang.yx@qq.com"};
-        @if (user != null)
-        {
-            userId = user.Id;
-            userInput = user.Mail;
-
-        }
-
-        //https://orange-wave-0b2b80500.azurestaticapps.net
-        //create a hub connection to the function app as we'll go via the function for everything SignalR.
-        hubConnection = new HubConnectionBuilder()
-    .WithUrl($"{navManager.BaseUri}/api")
-    .Build();
-
-        //Registers handler that will be invoked when the hub method with the specified method name is invoked.
-        hubConnection.On<ClientMessage>("clientMessage", (clientMessage) =>
-        {
-            messages.Add(clientMessage);
-            StateHasChanged(); //This tells Blazor that the UI needs to be updated
-        });
-
-        await hubConnection.StartAsync(); //start connection!
+        var request = GraphClient.Me.Request();
+        user = await request.GetAsync();
     }
-
-    //send our message to the function app
-    async Task SendAsync()
-    {
-
-        var msg = new ClientMessage
-        {
-            UID ="11",// user.Id,
-            Name = userInput,
-            Message = messageInput,
-            CreateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TZConvert.GetTimeZoneInfo("Asia/Shanghai")).ToString("yyyy-MM-dd HH:mm:ss")
-
-        };
-
-        await http.PostAsJsonAsync($"{navManager.BaseUri}/api/messages", msg); // post to the function app
-        messageInput = string.Empty; // clear the message from the textbox
-        StateHasChanged(); //update the UI
-    }
-
-    //Check we're connected
-    public bool IsConnected =>
-        hubConnection.State == HubConnectionState.Connected;
-
-    public class ClientMessage
-    {
-        public string UID { get; set; }
-        public string Name { get; set; }
-        public string Message { get; set; }
-        public string CreateTime { get; set; }
-    }
-
-    //https://github.com/lgulliver/blazor-webassembly-serverless-chat-demo
 }

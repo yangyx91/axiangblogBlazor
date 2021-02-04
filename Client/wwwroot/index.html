@@ -17,17 +17,15 @@
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css" />
     <link href="css/app.css" rel="stylesheet" />
-    <link href="css/Client.styles.css" rel="stylesheet" />
+    <link href="Client.styles.css" rel="stylesheet" />
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <script src="js/jquery/jquery.min.js"></script>
     <script src="js/bootstrap/bootstrap.min.js"></script>
-    <script src="js/inputfile.js"></script>
 </head>
 
 <body>
-    <app>Loading...</app>
-
+    <div id="app">Loading...</div>
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
@@ -60,8 +58,8 @@
         <script src="https://apip.weatherdt.com/simple/static/js/weather-simple-common.js?v=2.0"></script>
     </div>
     <script src="_content/Microsoft.Authentication.WebAssembly.Msal/AuthenticationService.js"></script>
-
-
+    <!--Reference the SignalR library. -->
+    <script src="_framework/blazor.webassembly.js"></script>
     <script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Av7NiY03EplXG-Hm49s8d-oTSC1nkveo3W0aQ42P2xTVF1qzrWi2Zxk5Wby5-Qzs&setMkt=zh-CN&setLang=zh&UR=CN&branch=release" async defer></script>
     <script type='text/javascript'>
         function GetMap() {
@@ -72,7 +70,6 @@
             //Add your post map load code here.
         }
     </script>
-    <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 

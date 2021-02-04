@@ -1,9 +1,9 @@
-{
-  "name": "°®¶Ú»õµÄÏóÊåÊå",
-  "short_name": "°®¶Ú»õµÄÏóÊåÊå",
+ï»¿{
+  "name": "çˆ±å›¤è´§çš„è±¡å”å”",
+  "short_name": "çˆ±å›¤è´§çš„è±¡å”å”",
   "start_url": "./",
   "display": "standalone",
-  "description": "°®Éú»î£¬°®¶Ú»õ¡£",
+  "description": "çˆ±ç”Ÿæ´»ï¼Œçˆ±å›¤è´§ã€‚",
   "background_color": "#ffffff",
   "theme_color": "#03173d",
   "icons": [
