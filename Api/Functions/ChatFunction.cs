@@ -13,7 +13,18 @@ namespace Api
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req,
             [SignalRConnectionInfo(HubName = "chatHub", ConnectionStringSetting = "Endpoint=https://axiang.service.signalr.net;AccessKey=MTgCKuCikD8m7meYfAph8vsepcbhKQDkvWstz9HQNBA=;Version=1.0;")] SignalRConnectionInfo connectionInfo)
         {
+
+            new ApiLogger("ChatFunction").LogError(System.Text.Json.JsonSerializer.Serialize(connectionInfo), null);
+            try
+            {
                 return connectionInfo;
+            }
+            catch (System.Exception ex)
+            {
+
+                new ApiLogger("ChatFunction").LogError(ex, ex.ToString(),null);
+                return connectionInfo;
+            }
         }
 
 
