@@ -17,37 +17,37 @@
 }
 
 @code {
-            private User user;
+        private User user;
 
-            protected async override Task OnInitializedAsync()
-            {
-                var request = GraphClient.Me.Request();
-                user = await request.GetAsync();
-            }
+        protected async override Task OnInitializedAsync()
+        {
+            var request = GraphClient.Me.Request();
+            user = await request.GetAsync();
+        }
 
-            private async Task WelcomeMail()
+        private async Task WelcomeMail()
+        {
+            var message = new Message
             {
-                var message = new Message
+                Subject = "用户登录站点提醒",
+                Body = new ItemBody
                 {
-                    Subject = "用户登录站点提醒",
-                    Body = new ItemBody
+                    ContentType = BodyType.Text,
+                    Content = string.Format("当前用户名:{0},登陆时间：{1}",user.UserPrincipalName,DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
+                },
+                ToRecipients = new List<Recipient>()
+                {
+                    new Recipient
                     {
-                        ContentType = BodyType.Text,
-                        Content = string.Format("当前用户名:{0},登陆时间：{1}",user.UserPrincipalName,DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
-                    },
-                    ToRecipients = new List<Recipient>()
-                    {
-                        new Recipient
+                        EmailAddress = new EmailAddress
                         {
-                            EmailAddress = new EmailAddress
-                            {
-                                Address = "yang@axiangblog.com"
-                            }
+                            Address = "yang@axiangblog.com"
                         }
                     }
-                };
+                }
+            };
 
-                    var request = GraphClient.Me.SendMail(message,false).Request();
-                    await request.PostAsync();
-            }
+                var request = GraphClient.Me.SendMail(message,false).Request();
+                await request.PostAsync();
+        }
 }

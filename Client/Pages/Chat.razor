@@ -5,15 +5,21 @@
 @inject GraphServiceClient GraphClient
 @inject HttpClient http
 
-<iframe src="https://axiangchat.azurewebsites.net" frameborder="0" style="width: 100%; height: 100%;"></iframe>
 
-@code {
+<h3>[Graph]用户信息</h3>
 
-    private User user;
+@if (user != null)
+{
+       <p>Id: @user.Id</p>
+       <p>UserPrincipalName: @user.UserPrincipalName</p>
+       <p>DisplayName: @user.DisplayName</p>
+       <p>Mail: @user.Mail</p>
+       <iframe src="https://axiangchat.azurewebsites.net" frameborder="0" style="width: 100%; height: 600px;"></iframe>}
 
-    protected override async Task OnInitializedAsync() //actions to do when the page is initialized
-    {
-        var request = GraphClient.Me.Request();
-        user = await request.GetAsync();
-    }
-}
+@code { private User user;
+
+            protected async override Task OnInitializedAsync()
+            {
+                var request = GraphClient.Me.Request();
+                user = await request.GetAsync();
+            } }
