@@ -3,7 +3,7 @@
 @using Microsoft.Graph
 @inject HttpClient http
 @inject NavigationManager manager
-@*@attribute [Authorize]*@
+@attribute [Authorize]
 @inject GraphServiceClient GraphClient
 
 <h3>上传本地图片</h3>
@@ -102,7 +102,7 @@
         var uploadImgUrl = imageDataUrls[0];
         var uploadResult = await http.PostAsJsonAsync<ComputerVisionImg>("api/describeimg", new ComputerVisionImg()
         {
-            url = (manager.BaseUri + uploadImgUrl)
+            url = uploadImgUrl
         }); 
 
         var res = await uploadResult.Content.ReadAsStringAsync();
