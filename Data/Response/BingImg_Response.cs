@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Data
 {
-    public class BingImgResponse
+    public class BingImg_Response 
     {
         public List<BingImg> images { get; set; }
 

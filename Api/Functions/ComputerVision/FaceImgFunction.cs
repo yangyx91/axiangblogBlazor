@@ -7,24 +7,22 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http;
 
-namespace Api.Functions
+namespace Api.Functions.ComputerVision
 {
-    //Computer Vision API (v3.1)
-    //https://eastasia.dev.cognitive.microsoft.com/docs/services/computer-vision-v3-1-ga/operations/56f91f2e778daf14a499f21b
-    public static class DescribeImgFunction
+    public static class FaceImgFunction
     {
-        private static readonly string endpointkey = "00933b7af07c4936957315222dbf349d";
-        private static readonly string endpointURL= "axiangcomputervision.cognitiveservices.azure.com";
-        private static readonly string endpointLocation= "eastasia";
-        //https://www.axiangblog.com/res/img/author.jpg
+        //Face API - v1.0
+        //https://eastasia.dev.cognitive.microsoft.com/docs/services/563879b61984550e40cbbe8d/operations/563879b61984550f30395236
+        private static readonly string endpointkey = "63b3f5d26b2b48a1bc0c1d77e048a519";
+        private static readonly string endpointURL = "axiangface.cognitiveservices.azure.com";
+        private static readonly string endpointLocation = "eastasia";
 
-
-        [FunctionName("DescribeImgFunction")] 
+        [FunctionName("FaceImgFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "describeimg")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "faceimg")] HttpRequest req)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             if (!string.IsNullOrEmpty(requestBody))
@@ -33,19 +31,24 @@ namespace Api.Functions
                 using (var client = new HttpClient())
                 {
                     var queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
-                    queryString["maxCandidates"] = "1";
-                    queryString["language"] = "zh";
+                    queryString["returnFaceId"] = "true";
+                    queryString["returnFaceLandmarks"] = "false";
+                    queryString["returnFaceAttributes"] = "age,gender,smile,emotion,hair";
+                    queryString["recognitionModel"] = "recognition_03";
+                    queryString["returnRecognitionModel"] = "false";
+                    queryString["detectionModel"] = "detection_01";
+                    queryString["faceIdTimeToLive"] = "86400";
                     client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", endpointkey);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var uri = "https://"+ endpointURL + "/vision/v3.1/describe?" + queryString;
+                    var uri = "https://" + endpointURL + "/face/v1.0/detect?" + queryString;
 
-                    var describeimgJson = new StringContent(
+                    var faceimgJson = new StringContent(
                         requestBody,
                         System.Text.Encoding.UTF8,
                         "application/json");
-                    var response = await client.PostAsync(uri, describeimgJson);
+                    var response = await client.PostAsync(uri, faceimgJson);
                     if (response.IsSuccessStatusCode)
                     {
                         var responseJson = await response.Content.ReadAsStringAsync();
