@@ -2,7 +2,8 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Graph
 @inject HttpClient http
-@attribute [Authorize]
+@inject NavigationManager manager
+@*@attribute [Authorize]*@
 @inject GraphServiceClient GraphClient
 
 <h3>上传本地图片</h3>
@@ -27,6 +28,7 @@
                 <p>Name:@imageName</p>
                 <img class="rounded m-1" src="@imageDataUrl" />
                 <button class="btn btn-primary" @onclick="UploadImg">Upload Img</button>
+                <button class="btn btn-primary" @onclick="DescribeImg">Describe Img</button>
             }
         </div>
     </div>
@@ -95,6 +97,17 @@
         }
     }
 
+    private async Task DescribeImg()
+    {
+        var uploadImgUrl = imageDataUrls[0];
+        var uploadResult = await http.PostAsJsonAsync<ComputerVisionImg>("api/describeimg", new ComputerVisionImg()
+        {
+            url = (manager.BaseUri + uploadImgUrl)
+        }); 
+
+        var res = await uploadResult.Content.ReadAsStringAsync();
+    }
+
     private async Task GetUpYunBucket()
     {
         upYunBucketUsage = await http.GetFromJsonAsync<long>("api/upYunUsage");
@@ -110,5 +123,10 @@
         public string Url { get; set; }
         public string UserId { get; set; }
         public string Creator { get; set; }
+    }
+
+    public class ComputerVisionImg
+    {
+        public string url { get; set; } 
     }
 }
