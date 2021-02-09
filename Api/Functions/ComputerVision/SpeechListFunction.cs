@@ -33,7 +33,7 @@ namespace Api.Functions.ComputerVision
                 client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", endpointkey);
                 //client.DefaultRequestHeaders.Accept.Clear();
                 //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var response = await client.PostAsync(endpointList, null);
+                var response = await client.GetAsync(endpointList);
                 if (response.IsSuccessStatusCode)
                 {
                     var responseJson = await response.Content.ReadAsStringAsync();
