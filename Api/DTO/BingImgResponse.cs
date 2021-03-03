@@ -26,7 +26,7 @@ namespace Api.DTO
         public string imgId { get; set; }
         public string createDate { get; set; }
         public string url { get; set; }
-        public string urlbase { get; set; }
+        public string urlBase { get; set; }
         public string title { get; set; }
         public string creator { get; set; }
     }
