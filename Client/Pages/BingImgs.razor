@@ -1,0 +1,57 @@
+﻿@page "/bingimgs"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@inject HttpClient http
+@attribute [Authorize]
+@inject GraphServiceClient GraphClient
+
+<h3>Imgs</h3>
+
+
+@if (user != null)
+{
+@if (imageDocuments.Count > 0)
+{
+<h4>Images</h4>
+
+<div class="card" style="width:30rem;">
+    <div class="card-body">
+        @foreach (var img in imageDocuments)
+        {
+        <p>ImgId:@img.imgId</p>
+        <img class="rounded m-1" src="@img.url" />
+        <p>Name:@img.title</p>
+        <p>Url:@img.url</p>
+        <p>CreateDate:@img.createDate</p> }
+    </div>
+</div>}}
+
+<p><button class="btn btn-primary" @onclick="GetImgs">获取图片</button></p>
+
+@code { private string imageName;
+
+        private long upYunBucketUsage = 0;
+
+        private List<BingImgDocument> imageDocuments = new List<BingImgDocument>();
+
+        private User user;
+
+        protected async override Task OnInitializedAsync()
+        {
+            var request = GraphClient.Me.Request();
+            user = await request.GetAsync();
+        }
+
+        private async Task GetImgs()
+        {
+            var imgResult = await http.GetFromJsonAsync<QueryBingImgDocumentResult>("api/allbingImgs");
+            if (imgResult != null && imgResult.total_rows > 0)
+            {
+                var allImgs = imgResult.rows;
+                foreach (var item in allImgs)
+                {
+                    imageDocuments.Add(item.doc);
+                }
+            }
+        }
+}

@@ -18,4 +18,36 @@ namespace Api.DTO
         public string urlbase { get; set; }
         public string copyright { get; set; }
     }
+
+    public class BingImgDocument
+    {
+        public string id { get; set; }
+        public string rev { get; set; }
+        public string imgId { get; set; }
+        public string createDate { get; set; }
+        public string url { get; set; }
+        public string urlbase { get; set; }
+        public string title { get; set; }
+        public string creator { get; set; }
+    }
+
+    public class QueryBingImgDocumentResult
+    {
+        public int total_rows { get; set; }
+
+        public int offset { get; set; }
+
+        public List<BingImgDocumentKeyValue> rows { get; set; }
+    }
+
+    public class BingImgDocumentKeyValue
+    {
+        public string id { get; set; }
+
+        public string key { get; set; }
+
+        public revDoc value { get; set; }
+
+        public BingImgDocument doc { get; set; }
+    }
 }

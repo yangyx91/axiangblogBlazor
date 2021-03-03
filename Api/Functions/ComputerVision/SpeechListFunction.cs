@@ -19,7 +19,9 @@ namespace Api.Functions.ComputerVision
         private static readonly string endpointkey = "f59840607fb4472bbab3e756ea4ce739";
         private static readonly string endpointTokenURL = "https://southeastasia.api.cognitive.microsoft.com/sts/v1.0/issuetoken";
         private static readonly string endpointList = "https://southeastasia.tts.speech.microsoft.com/cognitiveservices/voices/list";
-        private static readonly string endpointLocation = "southeastasia";
+
+        private static readonly string endpointApi = "https://southeastasia.tts.speech.microsoft.com/cognitiveservices/v1";
+        private static readonly string endpointLocation = "southeastasia"; 
 
        
 
