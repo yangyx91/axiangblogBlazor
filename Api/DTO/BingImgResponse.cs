@@ -21,8 +21,7 @@ namespace Api.DTO
 
     public class BingImgDocument
     {
-        public string id { get; set; }
-        public string rev { get; set; }
+        public string _id { get; set; }
         public string imgId { get; set; }
         public string CreateDate { get; set; }
         public string Url { get; set; }
@@ -33,21 +32,8 @@ namespace Api.DTO
 
     public class QueryBingImgDocumentResult
     {
-        public int total_rows { get; set; }
+        public int affectedDocs { get; set; }
 
-        public int offset { get; set; }
-
-        public List<BingImgDocumentKeyValue> rows { get; set; }
-    }
-
-    public class BingImgDocumentKeyValue
-    {
-        public string id { get; set; }
-
-        public string key { get; set; }
-
-        public revDoc value { get; set; }
-
-        public BingImgDocument doc { get; set; }
+        public List<BingImgDocument> data { get; set; }
     }
 }

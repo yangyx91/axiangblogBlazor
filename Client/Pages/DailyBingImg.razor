@@ -33,11 +33,26 @@
 
     private async Task GetTodayBingImg()
     {
-        todayImg = await http.GetFromJsonAsync<BingImg>("api/todayBingImg");
-        if (todayImg!=null&& !string.IsNullOrEmpty(todayImg.url))
+        var apiRes = await http.PostAsync("https://openapi.axiangblog.com/dailyBingImg/v1/",null);
+
+        var res=await apiRes.Content.ReadAsStringAsync();
+        if (!string.IsNullOrEmpty(res))
         {
-            bingImgName = todayImg.copyright;
-            bingImgPath = "https://www.bing.com" + todayImg.url;
+            try
+            {
+                todayImg=System.Text.Json.JsonSerializer.Deserialize<BingImg>(res);
+            }
+            catch (Exception ex)
+            {
+
+                todayImg=new BingImg();
+            }
+        }
+
+        if (todayImg!=null&& !string.IsNullOrEmpty(todayImg.imgId))
+        {
+            bingImgName = todayImg.Title;
+            bingImgPath = todayImg.Url;
 
         }
     }

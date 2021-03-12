@@ -30,28 +30,48 @@
 
 @code { private string imageName;
 
-        private long upYunBucketUsage = 0;
+    private long upYunBucketUsage = 0;
 
-        private IList<BingImgDocument> imageDocuments = new List<BingImgDocument>();
+    private IList<BingImgDocument> imageDocuments = new List<BingImgDocument>();
 
-        private User user;
+    private User user;
 
-        protected async override Task OnInitializedAsync()
+    protected async override Task OnInitializedAsync()
+    {
+        var request = GraphClient.Me.Request();
+        user = await request.GetAsync();
+    }
+
+    private async Task GetImgs()
+    {
+        var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.com/getBingImgs/v1/", new QueryBingImgParams()
         {
-            var request = GraphClient.Me.Request();
-            user = await request.GetAsync();
-        }
+            page = 1,
+            pageSize=50
+        }) ;
+        var res = await apiRes.Content.ReadAsStringAsync();
 
-        private async Task GetImgs()
+        if (!string.IsNullOrEmpty(res))
         {
-            var imgResult = await http.GetFromJsonAsync<QueryBingImgDocumentResult>("api/allbingImgs");
-            if (imgResult != null && imgResult.total_rows > 0)
+            try
             {
-                var allImgs = imgResult.rows;
-                foreach (var item in allImgs)
+                var imgResult = System.Text.Json.JsonSerializer.Deserialize<BingImg_Response>(res);
+
+                if (imgResult != null && imgResult.data!=null && imgResult.data.Count() > 0)
                 {
-                    imageDocuments.Add(item.doc);
+                    var allImgs = imgResult.data;
+                    foreach (var item in allImgs)
+                    {
+                        imageDocuments.Add(item);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
+    }
 }
