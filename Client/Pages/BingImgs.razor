@@ -2,11 +2,12 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Graph
 @inject HttpClient http
-@attribute [Authorize]
+@*@attribute [Authorize]*@
 @inject GraphServiceClient GraphClient
 
 <h3>Imgs</h3>
 
+<p><button class="btn btn-primary" @onclick="GetImgs">获取图片</button></p>
 
 @if (user != null)
 {
@@ -22,11 +23,15 @@
         <img class="rounded m-1" src="@img.Url" />
         <p>Name:@img.Title</p>
         <p>Url:@img.Url</p>
-        <p>CreateDate:@img.CreateDate</p> }
+        <p>CreateDate:@img.CreateDate</p>
+        @if (user.Mail=="yang@axiangblog.com") { 
+           <p><button class="btn btn-primary" @onclick="(() => DelImg(img.imgId) )">删除图片</button></p>
+         }
+        }
     </div>
 </div>}}
 
-<p><button class="btn btn-primary" @onclick="GetImgs">获取图片</button></p>
+
 
 @code { private string imageName;
 
@@ -73,5 +78,15 @@
             }
 
         }
+    }
+
+    private async Task DelImg(string imgId)
+    {
+        var apiRes = await http.PostAsJsonAsync<DelBingImg_Request>("https://openapi.axiangblog.com/delBingImgs/v1/", new DelBingImg_Request()
+        {
+            imgId=imgId
+        });
+
+        var res = await apiRes.Content.ReadAsStringAsync();
     }
 }
