@@ -56,7 +56,7 @@
 
         //create a hub connection to the function app as we'll go via the function for everything SignalR.
         hubConnection = new HubConnectionBuilder()
-        .WithUrl("/api")
+        .WithUrl("https://orange-wave-0b2b80500.azurestaticapps.net/api")
         .Build();
 
         //Registers handler that will be invoked when the hub method with the specified method name is invoked.
