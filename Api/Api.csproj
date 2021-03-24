@@ -5,6 +5,7 @@
     <UserSecretsId>89ba880c-bfae-4d0e-a279-6fa9e3fca9cc</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.SignalRService" Version="1.2.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.11" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="TimeZoneConverter" Version="3.3.0" />

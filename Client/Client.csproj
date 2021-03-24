@@ -4,11 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
 	<BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
+	<UserSecretsId>870e0869-e401-4ff1-9b82-c9d6844f00be</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.4" />
     <PackageReference Include="Microsoft.Authentication.WebAssembly.Msal" Version="5.0.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.Graph" Version="3.23.0" />

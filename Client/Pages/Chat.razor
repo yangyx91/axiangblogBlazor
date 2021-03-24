@@ -10,16 +10,39 @@
 
 @if (user != null)
 {
-       <p>Id: @user.Id</p>
-       <p>UserPrincipalName: @user.UserPrincipalName</p>
-       <p>DisplayName: @user.DisplayName</p>
-       <p>Mail: @user.Mail</p>
-       <iframe src="https://axiangchat.azurewebsites.net" frameborder="0" style="width: 100%; height: 600px;"></iframe>}
+<p>Id: @user.Id</p>
+<p>UserPrincipalName: @user.UserPrincipalName</p>
+<p>DisplayName: @user.DisplayName</p>
+                <p>Mail: @user.Mail</p>}
 
-@code { private User user;
+@code { 
 
-            protected async override Task OnInitializedAsync()
-            {
-                var request = GraphClient.Me.Request();
-                user = await request.GetAsync();
-            } }
+    private User user;
+
+    private HubConnection SignalRHubConnection; //for connecting to SignalR
+
+    protected readonly string SignalServerUri = "https://orange-wave-0b2b80500.azurestaticapps.net/api/"; //URL for function app. Leave this as is for now.
+
+    /// <summary>
+    /// The method called when the component is loaded
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task OnInitializedAsync()
+    {
+        var request = GraphClient.Me.Request();
+        user = await request.GetAsync();
+        // Build the Hub connection
+        SignalRHubConnection = new HubConnectionBuilder()
+        .WithUrl(SignalServerUri) //<<URL for the Azure SignalR service negotiate function goes here >>
+        .Build();
+
+        Connect();
+    }
+
+    private void Connect()
+    {
+
+    }
+
+
+}
