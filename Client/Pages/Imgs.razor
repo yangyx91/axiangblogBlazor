@@ -19,10 +19,11 @@
                 @foreach (var img in imageDocuments)
                 {
                     <p>ImgId:@img.imgId</p>
-                    <img class="rounded m-1" src="@img.url" />
-                    <p>Name:@img.name</p>
-                    <p>UpyunPath:@img.upyunPath</p>
-                    <p>Creator:@img.creator</p>
+                    <img class="rounded m-1" src="@img.Url" />
+                    <p>Title:@img.Title</p>
+                    <p>Url:@img.Url</p>
+                    <p>CreateDate:@img.CreateDate</p>
+                    <p>Creator:@img.Creator</p>
                 }
             </div>
         </div>
@@ -48,14 +49,10 @@
 
     private async Task GetImgs()
     {
-        var imgResult = await http.GetFromJsonAsync<QueryImgDocumentResult>("api/allimgs");
-        if (imgResult!=null&&imgResult.total_rows>0)
+        var imgResult = await http.GetFromJsonAsync<List<ImgDocument>>("api/allimgs");
+        if (imgResult!=null&&imgResult.Count()>0)
         {
-            var allImgs = imgResult.rows;
-            foreach (var item in allImgs)
-            {
-                imageDocuments.Add(item.doc);
-            }
+            imageDocuments = imgResult;
         }
     }
 

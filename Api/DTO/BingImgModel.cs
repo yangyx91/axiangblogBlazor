@@ -1,13 +1,14 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Data
+namespace Api.DTO
 {
-    public class ImgDocument
+    public class BingImgModel
     {
+        public ObjectId _id { get; set; }
+
         public string imgId { get; set; }
         public string CreateDate { get; set; }
         public string Url { get; set; }
