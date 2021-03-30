@@ -18,7 +18,8 @@ namespace Data
 		public string Description { get; set; }
 		public string PostUrl { get; set; }
 		public string Author { get; set; }
-		public string PostDate { get; set; }
+        public DateTime PostDateTime { get; set; }
+        public string PostDate { get; set; }
 		public string Tags { get; set; }
 		public string Thumbnail { get; set; }
 		public bool IsTop { get; set; }

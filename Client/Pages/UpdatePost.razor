@@ -7,48 +7,58 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
     <p>
-        <label>
-            Title:<InputText @bind-Value="wxPost.Title"  />
+        <label class="col-form-label">
+            Title:
+        </label><InputText @bind-Value="wxPost.Title" class="input-group-text" />
+    </p>
+    <p>
+        <label class="col-form-label">
+            Description:<InputText @bind-Value="wxPost.Description" class="input-group-text" />
         </label>
     </p>
     <p>
-        <label>
-            Description:<InputText @bind-Value="wxPost.Description" />
+        <label class="col-form-label">
+            PostUrl:<InputText @bind-Value="wxPost.PostUrl" class="input-group-text" />
         </label>
     </p>
     <p>
-        <label>
-            PostUrl:<InputText @bind-Value="wxPost.PostUrl" />
+        <label class="col-form-label">
+            Tags:<InputText @bind-Value="wxPost.Tags" class="input-group-text" />
         </label>
     </p>
     <p>
-        <label>
-            Tags:<InputText @bind-Value="wxPost.Tags" />
+        <label class="col-form-label">
+            Thumbnail:<InputText @bind-Value="wxPost.Thumbnail" class="input-group-text" />
         </label>
     </p>
     <p>
-        <label>
-            Thumbnail:<InputText @bind-Value="wxPost.Thumbnail" />
+        <InputFile OnChange="@OnInputFileChange" multiple />
+        <img class="rounded m-1" src="@imageDataUrl" />
+        <button class="btn btn-primary" @onclick="UploadThumbnail">Upload Thumbnail</button>
+    </p>
+    <p>
+        <label class="col-form-label">
+            PostType:<InputSelect @bind-Value="wxPost.PostType" class="custom-select-lg">
+                <option value="">Select ...</option>
+                <option value="云开发">云开发</option>
+                <option value="酷软">酷软</option>
+                <option value="生活">生活</option>
+            </InputSelect>
         </label>
     </p>
     <p>
-        <label>
-            PostType:<InputText @bind-Value="wxPost.PostType" />
+        <label class="col-form-label">
+            Topic:<InputText @bind-Value="wxPost.Topic" class="input-group-text" />
         </label>
     </p>
     <p>
-        <label>
-            Topic:<InputText @bind-Value="wxPost.Topic" />
+        <label class="col-form-label">
+            IsTop:<InputCheckbox @bind-Value="wxPost.IsTop" class="input-group-text" />
         </label>
     </p>
     <p>
-        <label>
-            IsTop:<InputCheckbox @bind-Value="wxPost.IsTop" />
-        </label>
-    </p>
-    <p>
-        <label>
-            PostDate:<InputDate @bind-Value="wxPost.PostDate" />
+        <label class="col-form-label">
+            PostDate:<InputDate @bind-Value="wxPost.PostDateTime" class="input-group-text" />
         </label>
     </p>
     <button type="submit" class="btn btn-primary">保存</button>
@@ -59,9 +69,15 @@
 
     private string result="";
 
-    private WxPostDocument wxPost = new WxPostDocument() { 
-       IsTop=false
+    private WxPostDocument wxPost = new WxPostDocument() {
+        IsTop=false
     };
+
+    private List<WxPostTypeDocument> wxPostTypes = new List<WxPostTypeDocument>();
+
+    private string imageDataUrl="";
+
+    private string bucketDomain = "https://pan.axiangblog.com";
 
     protected async override Task OnInitializedAsync()
     {
@@ -73,6 +89,7 @@
     {
         if (!string.IsNullOrEmpty(wxPost.Title))
         {
+            wxPost.PostDate = wxPost.PostDateTime.ToString("yyyy-MM-dd");
             var apiRes = await http.PostAsJsonAsync<WxPostDocument>("https://openapi.axiangblog.com/addWxPost/v1/", wxPost);
             var res = await apiRes.Content.ReadAsStringAsync();
 
@@ -84,6 +101,44 @@
         else
         {
             result = "Title为null";
+        }
+    }
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var maxAllowedFiles = 1;
+        long maxFileSize = 1024 * 1024 * 15;
+
+        foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            var format = imageFile.ContentType;
+            var resizedImageFile = await imageFile.RequestImageFileAsync(format,
+        600, 400);
+            var buffer = new byte[resizedImageFile.Size];
+            await resizedImageFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
+            imageDataUrl =
+            $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        }
+    }
+
+    private async Task UploadThumbnail()
+    {
+        if (!string.IsNullOrEmpty(imageDataUrl)&& imageDataUrl.Contains("base64"))
+        {
+            var uploadResult = await http.PostAsJsonAsync<string>("api/uploadImg", imageDataUrl);
+
+            var res = await uploadResult.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res) && res.StartsWith("/"))
+            {
+                imageDataUrl = bucketDomain + res;
+                wxPost.Thumbnail = imageDataUrl;
+                var currentDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TZConvert.GetTimeZoneInfo("Asia/Shanghai"));
+            }
+        }
+        else
+        {
+            imageDataUrl = "";
         }
     }
 }
