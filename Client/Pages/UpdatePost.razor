@@ -1,0 +1,89 @@
+﻿@page "/addwxpost"
+
+@inject HttpClient http
+
+<h3>Update one Post</h3>
+<EditForm Model="@wxPost" OnValidSubmit="@UpdateOnePost">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <p>
+        <label>
+            Title:<InputText @bind-Value="wxPost.Title"  />
+        </label>
+    </p>
+    <p>
+        <label>
+            Description:<InputText @bind-Value="wxPost.Description" />
+        </label>
+    </p>
+    <p>
+        <label>
+            PostUrl:<InputText @bind-Value="wxPost.PostUrl" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Tags:<InputText @bind-Value="wxPost.Tags" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Thumbnail:<InputText @bind-Value="wxPost.Thumbnail" />
+        </label>
+    </p>
+    <p>
+        <label>
+            PostType:<InputText @bind-Value="wxPost.PostType" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Topic:<InputText @bind-Value="wxPost.Topic" />
+        </label>
+    </p>
+    <p>
+        <label>
+            IsTop:<InputCheckbox @bind-Value="wxPost.IsTop" />
+        </label>
+    </p>
+    <p>
+        <label>
+            PostDate:<InputDate @bind-Value="wxPost.PostDate" />
+        </label>
+    </p>
+    <button type="submit" class="btn btn-primary">保存</button>
+</EditForm>
+<p>处理结果：@result</p>
+
+@code {
+
+    private string result="";
+
+    private WxPostDocument wxPost = new WxPostDocument() { 
+       IsTop=false
+    };
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        //StateHasChanged();
+    }
+
+    private async Task UpdateOnePost()
+    {
+        if (!string.IsNullOrEmpty(wxPost.Title))
+        {
+            var apiRes = await http.PostAsJsonAsync<WxPostDocument>("https://openapi.axiangblog.com/addWxPost/v1/", wxPost);
+            var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res))
+            {
+            }
+            result = res;
+        }
+        else
+        {
+            result = "Title为null";
+        }
+    }
+}

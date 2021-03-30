@@ -6,7 +6,7 @@
 @inject GraphServiceClient GraphClient
 
 <h3>Imgs</h3>
-
+<p><button class="btn btn-primary" @onclick="GetImgs">获取图片</button></p>
 
 @if (user != null)
 {
@@ -30,7 +30,7 @@
     }
 }
 
-<p><button class="btn btn-primary" @onclick="GetImgs">获取图片</button></p>
+
 
 @code {
     private string imageName;
