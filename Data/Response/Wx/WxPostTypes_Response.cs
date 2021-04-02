@@ -24,6 +24,15 @@ namespace Data
 
         public string Author { get; set; }
 
+        public DateTime PostTypeTime { get; set; }
+
         public string PostTypeDate { get; set; }
+    }
+
+    public class QueryWxPostTypeParams
+    {
+        public string postTypeId { get; set; }
+
+        public string postType { get; set; }
     }
 }

@@ -1,0 +1,172 @@
+﻿@page "/editwxpostType/{postTypeId}"
+
+@inject HttpClient http
+
+<h3>编辑话题</h3>
+<form>
+    <EditForm Model="@wxPostType" OnValidSubmit="@EditOnePostType">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        @if (!string.IsNullOrEmpty(PostTypeId))
+        {
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostTypeId:</label>
+            <div class="col-sm-6">
+                <InputText @bind-Value="wxPostType.PostTypeId" class="form-control" />
+            </div>
+        </div>
+        }
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostType:</label>
+            <div class="col-sm-6">
+                <InputText @bind-Value="wxPostType.PostType" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostTypeLevel:</label>
+            <div class="col-sm-6">
+                <InputSelect @bind-Value="wxPostType.PostTypeLevel" class="form-control">
+                    <option value="">Select ...</option>
+                    <option value="1">一级</option>
+                    <option value="2">二级</option>
+                    <option value="0">不限</option>
+                </InputSelect>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostTypeParent:</label>
+            <div class="col-sm-6">
+                <InputSelect @bind-Value="wxPostType.PostTypeParentId" class="form-control">
+                    <option value="">Select ...</option>
+                    @if (wxPostTypeDocuments.Count() > 0)
+                    {
+                        foreach (var wxPostType in wxPostTypeDocuments)
+                        {
+                            <option value="@wxPostType.PostType">@wxPostType.PostType</option>}
+                        }
+                </InputSelect>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostTypeDate:</label>
+            <div class="col-sm-6">
+                <InputDate @bind-Value="wxPostType.PostTypeTime" class="input-group-text" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </EditForm>
+    <p>处理结果：@result</p>
+</form>
+
+@code { 
+
+    private string result = "";
+
+    [Parameter]
+    public string PostTypeId { get; set; }
+
+    private WxPostTypeDocument wxPostType = new WxPostTypeDocument()
+    {
+        PostTypeLevel = 1,
+        PostTypeParentId = "",
+        Author = "admin"
+    };
+
+    private List<WxPostTypeDocument> wxPostTypes = new List<WxPostTypeDocument>();
+
+    private List<WxPostTypeDocument> wxPostTypeDocuments = new List<WxPostTypeDocument>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(PostTypeId))
+        {
+            var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/getWxPostTypes/v1/", new QueryWxPostTypeParams()
+            {
+                postTypeId=PostTypeId
+            });
+            var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res))
+            {
+                try
+                {
+                    var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPostTypes_Response>(res);
+
+                    if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                    {
+                        var wxPosts = wxPostResult.data;
+                        wxPostType = wxPosts.FirstOrDefault();
+                        wxPostType.PostTypeTime = DateTime.Parse(wxPostType.PostTypeDate);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+
+            }
+
+            wxPostTypeDocuments = new List<WxPostTypeDocument>();
+            var apiwxPostTypeRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/getWxPostTypes/v1/", new QueryWxPostTypeParams()
+            {
+                postType = "",
+                postTypeId = ""
+            });
+            var wxPostTyperes = await apiwxPostTypeRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(wxPostTyperes))
+            {
+                try
+                {
+                    var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPostTypes_Response>(wxPostTyperes);
+
+                    if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                    {
+                        var wxPosts = wxPostResult.data;
+                        foreach (var wxPost in wxPosts)
+                        {
+                            wxPostTypeDocuments.Add(wxPost);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+
+            }
+        }
+        else
+        {
+            PostTypeId = "";
+            wxPostType.PostTypeId = "";
+        }
+        //StateHasChanged();
+    }
+
+    private async Task EditOnePostType()
+    {
+        if (!string.IsNullOrEmpty(wxPostType.PostType)&& !string.IsNullOrEmpty(wxPostType.PostTypeId))
+        {
+            wxPostType.PostTypeDate = wxPostType.PostTypeTime.ToString("yyyy-MM-dd");
+            var apiRes = await http.PostAsJsonAsync<WxPostTypeDocument>("https://openapi.axiangblog.com/editWxPostType/v1/", wxPostType);
+            var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res))
+            {
+            }
+            result = res;
+        }
+        else
+        {
+            result = "PostType为null";
+        }
+    }
+
+}

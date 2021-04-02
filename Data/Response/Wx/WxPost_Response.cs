@@ -27,4 +27,17 @@ namespace Data
 		public string Topic { get; set; }
 
 	}
+
+    public class QueryWxPostParams
+    {
+        public int page { get; set; }
+
+        public int pageSize { get; set; }
+
+        public string postId { get; set; }
+
+        public string postType { get; set; }
+
+        public string title { get; set; }
+    }
 }

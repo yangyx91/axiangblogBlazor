@@ -1,0 +1,180 @@
+﻿@page "/wxpostTypes"
+
+@inject HttpClient http
+
+<h3>订阅号话题/标签</h3>
+
+<p><button class="btn btn-primary" @onclick="GetPostTypes">获取标签列表</button></p>
+
+@if (wxPostDocuments.Count > 0)
+{
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">PostTypeId</th>
+            <th scope="col">PostType</th>
+            <th scope="col">PostTypeParentId</th>
+            <th scope="col">PostTypeLevel</th>
+            <th scope="col">Author</th>
+            <th scope="col">PostTypeDate</th>
+            <th scope="col">Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var post in wxPostDocuments)
+        {
+            var navLink = "editwxpostType/" + @post.PostTypeId;
+        <tr>
+            <td>@post.PostTypeId</td>
+            <td>@post.PostType</td>
+            <td>@post.PostTypeParentId</td>
+            <td>@post.PostTypeLevel</td>
+            <td>@post.Author</td>
+            <td>@post.PostTypeDate</td>
+            <td><NavLink class="nav-link" href="@navLink">Edit</NavLink> </td>
+        </tr>
+      }
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (page > 1)
+        {
+            <li class="page-item disabled">
+                <button class="btn btn-primary" @onclick="lastPage">上一页</button>
+            </li>
+            <li class="page-item">
+                <button class="btn btn-primary" @onclick="nextPage">下一页</button>
+            </li> 
+          }
+        else
+        {
+            <li class="page-item">
+                <button class="btn btn-primary" @onclick="nextPage">下一页</button>
+            </li>                
+            }
+    </ul>
+</nav>
+}
+
+@code 
+{ 
+    private int page = 1;
+
+    private int pageSize = 50;
+
+
+    private IList<WxPostTypeDocument> wxPostDocuments = new List<WxPostTypeDocument>();
+
+    protected async override Task OnInitializedAsync(){
+
+        //StateHasChanged();
+    }
+
+    private async Task GetPostTypes()
+    {
+        wxPostDocuments= new List<WxPostTypeDocument>();
+        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/getWxPostTypes/v1/", new QueryWxPostTypeParams()
+        {
+            postType="",
+            postTypeId=""
+        });
+        var res = await apiRes.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrEmpty(res))
+        {
+            try
+            {
+                var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPostTypes_Response>(res);
+
+                if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                {
+                    var wxPosts = wxPostResult.data;
+                    foreach (var wxPost in wxPosts)
+                    {
+                        wxPostDocuments.Add(wxPost);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+    }
+
+    private async Task lastPage()
+    {
+        page--;
+        if (page>0)
+        {
+
+            var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/getWxPostTypes/v1/", new QueryWxPostTypeParams()
+            {
+                postType = "",
+                postTypeId = ""
+            });
+            var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res))
+            {
+                try
+                {
+                    var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPostTypes_Response>(res);
+
+                    if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                    {
+                        wxPostDocuments = new List<WxPostTypeDocument>();
+                        var wxPosts = wxPostResult.data;
+                        foreach (var wxPost in wxPosts)
+                        {
+                            wxPostDocuments.Add(wxPost);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+
+            }
+        }
+    }
+
+    private async Task nextPage()
+    {
+        page++;
+        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/getWxPostTypes/v1/", new QueryWxPostTypeParams()
+        {
+            postType = "",
+            postTypeId = ""
+        });
+        var res = await apiRes.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrEmpty(res))
+        {
+            try
+            {
+                var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPostTypes_Response>(res);
+
+                if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                {
+                    wxPostDocuments = new List<WxPostTypeDocument>();
+                    var wxPosts = wxPostResult.data;
+                    foreach (var wxPost in wxPosts)
+                    {
+                        wxPostDocuments.Add(wxPost);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+    }
+}

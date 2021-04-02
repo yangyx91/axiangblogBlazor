@@ -1,0 +1,227 @@
+﻿@page "/wxposts"
+
+@inject HttpClient http
+
+<h3>Posts</h3>
+<EditForm Model="@wxPost" OnValidSubmit="@SearchPosts">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="input-group mb-3">
+        <InputText @bind-Value="wxPost.Title" class="form-control" />
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+            <button class="btn btn-primary" @onclick="GetPosts" type="button">获取列表</button>
+        </div>
+    </div>
+</EditForm>
+<div class="col-sm-8">
+    @if (wxPostDocuments.Count > 0)
+    {
+    @foreach (var post in wxPostDocuments)
+    {
+        var navLink = "editwxpost/" + @post.PostId;
+        <div class="card">
+            <div class="card-header">@post.PostId</div>
+            <div class="card-body">
+                <img class="rounded m-1" src="@post.Thumbnail" />
+                <h5 class="card-title">@post.Title</h5>
+                <p class="card-text">@post.Description</p>
+                <p class="card-text"><small class="text-muted"></small></p>
+                <footer class="blockquote-footer">@post.Author,@post.PostDate</footer>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@post.PostType</li>
+                <li class="list-group-item">@post.Tags</li>
+                <li class="list-group-item">@post.Topic</li>
+            </ul>
+            <div class="card-body">
+                <a href="@post.PostUrl" class="card-link" target="_blank">Read</a>
+                <a href="@navLink" class="card-link">Edit</a>
+          </div>
+        </div>
+        }
+   
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+             @if (page > 1)
+                {
+                    <li class="page-item disabled">
+                        <button class="btn btn-primary" @onclick="lastPage">上一页</button>
+                    </li>
+                    <li class="page-item">
+                        <button class="btn btn-primary" @onclick="nextPage">下一页</button>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <button class="btn btn-primary" @onclick="nextPage">下一页</button>
+                    </li>
+                }
+          </ul>
+        </nav>
+    }
+    </div>
+
+@code
+{ private int page = 1;
+
+            private int pageSize = 50;
+
+            private WxPostDocument wxPost = new WxPostDocument();
+
+            private IList<WxPostDocument> wxPostDocuments = new List<WxPostDocument>();
+
+            protected async override Task OnInitializedAsync()
+            {
+
+                //StateHasChanged();
+            }
+
+            private async Task GetPosts()
+            {
+                wxPostDocuments = new List<WxPostDocument>();
+                var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.com/getWxPosts/v1/", new QueryBingImgParams()
+                {
+                    page = page,
+                    pageSize = pageSize
+                });
+                var res = await apiRes.Content.ReadAsStringAsync();
+
+                if (!string.IsNullOrEmpty(res))
+                {
+                    try
+                    {
+                        var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPost_Response>(res);
+
+                        if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                        {
+                            var wxPosts = wxPostResult.data;
+                            foreach (var wxPost in wxPosts)
+                            {
+                                wxPostDocuments.Add(wxPost);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw;
+                    }
+
+                }
+            }
+
+            private async Task SearchPosts()
+            {
+                if (!string.IsNullOrEmpty(wxPost.Title))
+                {
+                    wxPostDocuments = new List<WxPostDocument>();
+                    var apiRes = await http.PostAsJsonAsync<QueryWxPostParams>("https://openapi.axiangblog.com/getWxPosts/v1/", new QueryWxPostParams()
+                    {
+                        page = page,
+                        pageSize = pageSize,
+                        postId = "",
+                        postType = "",
+                        title = wxPost.Title.Substring(0, 1).ToUpper() + wxPost.Title.Substring(1, wxPost.Title.Length - 1)
+                    });
+                    var res = await apiRes.Content.ReadAsStringAsync();
+
+                    if (!string.IsNullOrEmpty(res))
+                    {
+                        try
+                        {
+                            var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPost_Response>(res);
+
+                            if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                            {
+                                var wxPosts = wxPostResult.data;
+                                foreach (var wxPost in wxPosts)
+                                {
+                                    wxPostDocuments.Add(wxPost);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw;
+                        }
+
+                    }
+                }
+            }
+
+            private async Task lastPage()
+            {
+                page--;
+                if (page > 0)
+                {
+
+                    var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.com/getWxPosts/v1/", new QueryBingImgParams()
+                    {
+                        page = page,
+                        pageSize = pageSize
+                    });
+                    var res = await apiRes.Content.ReadAsStringAsync();
+
+                    if (!string.IsNullOrEmpty(res))
+                    {
+                        try
+                        {
+                            var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPost_Response>(res);
+
+                            if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                            {
+                                wxPostDocuments = new List<WxPostDocument>();
+                                var wxPosts = wxPostResult.data;
+                                foreach (var wxPost in wxPosts)
+                                {
+                                    wxPostDocuments.Add(wxPost);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw;
+                        }
+
+                    }
+                }
+            }
+
+            private async Task nextPage()
+            {
+                page++;
+                var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.com/getWxPosts/v1/", new QueryBingImgParams()
+                {
+                    page = page,
+                    pageSize = pageSize
+                });
+                var res = await apiRes.Content.ReadAsStringAsync();
+
+                if (!string.IsNullOrEmpty(res))
+                {
+                    try
+                    {
+                        var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPost_Response>(res);
+
+                        if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                        {
+                            wxPostDocuments = new List<WxPostDocument>();
+                            var wxPosts = wxPostResult.data;
+                            foreach (var wxPost in wxPosts)
+                            {
+                                wxPostDocuments.Add(wxPost);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw;
+                    }
+                }
+            } }

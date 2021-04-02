@@ -29,7 +29,9 @@
 
     private string bingImgName;
 
-    private BingImg todayImg;
+    private BingImg todayImg=new BingImg();
+
+    private List<BingImgDocument> bingImgDocuments = new List<BingImgDocument>();
 
     private async Task GetTodayBingImg()
     {
@@ -40,7 +42,7 @@
         {
             try
             {
-                todayImg=System.Text.Json.JsonSerializer.Deserialize<BingImg>(res);
+                bingImgDocuments = System.Text.Json.JsonSerializer.Deserialize<List<BingImgDocument>>(res);
             }
             catch (Exception ex)
             {
@@ -49,8 +51,10 @@
             }
         }
 
-        if (todayImg!=null&& !string.IsNullOrEmpty(todayImg.imgId))
+        if (bingImgDocuments != null&& bingImgDocuments.Count()>0)
         {
+            todayImg.Title = bingImgDocuments.FirstOrDefault().Title;
+            todayImg.Url = bingImgDocuments.FirstOrDefault().Url;
             bingImgName = todayImg.Title;
             bingImgPath = todayImg.Url;
 

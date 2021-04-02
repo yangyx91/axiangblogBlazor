@@ -1,0 +1,206 @@
+﻿@page "/addwxpost"
+
+@inject HttpClient http
+
+<h3>新建文章</h3>
+<form>
+    <EditForm Model="@wxPost" OnValidSubmit="@AddOnePost">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Title:</label>
+            <div class="col-sm-6">
+                <InputText @bind-Value="wxPost.Title" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Description:</label>
+            <div class="col-sm-6">
+                <InputTextArea @bind-Value="wxPost.Description" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostUrl:</label>
+            <div class="col-sm-6">
+                <InputTextArea @bind-Value="wxPost.PostUrl" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Tags:</label>
+            <div class="col-sm-6">
+                <InputText @bind-Value="wxPost.Tags" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Topic:</label>
+            <div class="col-sm-6">
+                <InputText @bind-Value="wxPost.Topic" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Thumbnail:</label>
+            <div class="col-sm-6">
+                <InputTextArea @bind-Value="wxPost.Thumbnail" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">File:</label>
+            <div class="col-sm-6">
+                <InputFile OnChange="@OnInputFileChange" class="form-control-file" multiple />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Preview:</label>
+            <div class="col-sm-6">
+                <img class="rounded m-1" src="@imageDataUrl" />
+                <button class="btn btn-primary" @onclick="UploadThumbnail">Upload</button>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostType:</label>
+            <div class="col-sm-6">
+                <InputSelect @bind-Value="wxPost.PostType" class="form-control">
+                    <option value="">Select ...</option>
+                    @if (wxPostTypeDocuments.Count() > 0)
+                    {
+                        foreach (var wxPostType in wxPostTypeDocuments)
+                        {
+                        <option value="@wxPostType.PostType">@wxPostType.PostType</option>}
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">IsTop:</label>
+            <div class="col-sm-6">
+                <div class="form-check">
+                    <InputCheckbox @bind-Value="wxPost.IsTop" class="form-check-input" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">PostDate:</label>
+            <div class="col-sm-6">
+                <InputDate @bind-Value="wxPost.PostDateTime" class="input-group-text" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </EditForm>
+    <p>处理结果：@result</p>
+</form>
+
+
+
+@code { 
+
+    private string result = "";
+
+    private WxPostDocument wxPost = new WxPostDocument()
+    {
+        IsTop = false
+    };
+
+    private List<WxPostTypeDocument> wxPostTypeDocuments = new List<WxPostTypeDocument>();
+
+    private string imageDataUrl = "https://pan.axiangblog.com/20210330/90541130886843438f2b7a67b9778ad0.png";
+
+    private string bucketDomain = "https://pan.axiangblog.com";
+
+    protected async override Task OnInitializedAsync()
+    {
+        wxPostTypeDocuments = new List<WxPostTypeDocument>();
+        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/getWxPostTypes/v1/", new QueryWxPostTypeParams()
+        {
+            postType = "",
+            postTypeId = ""
+        });
+        var res = await apiRes.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrEmpty(res))
+        {
+            try
+            {
+                var wxPostResult = System.Text.Json.JsonSerializer.Deserialize<WxPostTypes_Response>(res);
+
+                if (wxPostResult != null && wxPostResult.data != null && wxPostResult.data.Count() > 0)
+                {
+                    var wxPosts = wxPostResult.data;
+                    foreach (var wxPost in wxPosts)
+                    {
+                        wxPostTypeDocuments.Add(wxPost);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+        //StateHasChanged();
+    }
+
+    private async Task AddOnePost()
+    {
+        if (!string.IsNullOrEmpty(wxPost.Title))
+        {
+            wxPost.PostDate = wxPost.PostDateTime.ToString("yyyy-MM-dd");
+            var apiRes = await http.PostAsJsonAsync<WxPostDocument>("https://openapi.axiangblog.com/editWxPost/v1/", wxPost);
+            var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res))
+            {
+            }
+            result = res;
+        }
+        else
+        {
+            result = "Title为null";
+        }
+    }
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var maxAllowedFiles = 1;
+        long maxFileSize = 1024 * 1024 * 15;
+
+        foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            var format = imageFile.ContentType;
+            var resizedImageFile = await imageFile.RequestImageFileAsync(format,
+        600, 400);
+            var buffer = new byte[resizedImageFile.Size];
+            await resizedImageFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
+            imageDataUrl =
+            $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        }
+    }
+
+    private async Task UploadThumbnail()
+    {
+        if (!string.IsNullOrEmpty(imageDataUrl) && imageDataUrl.Contains("base64"))
+        {
+            var uploadResult = await http.PostAsJsonAsync<string>("api/uploadImg", imageDataUrl);
+
+            var res = await uploadResult.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res) && res.StartsWith("/"))
+            {
+                imageDataUrl = bucketDomain + res;
+                wxPost.Thumbnail = imageDataUrl;
+                var currentDateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TZConvert.GetTimeZoneInfo("Asia/Shanghai"));
+
+            }
+        }
+        else
+        {
+            imageDataUrl = "";
+        }
+    }
+}
