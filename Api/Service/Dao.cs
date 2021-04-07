@@ -134,14 +134,14 @@ namespace Api.Service
             var mongoCollection = mongoDatabase.GetCollection<T>(collectionName);
             var filter = Builders<T>.Filter.Eq(conditionName, conditionValue);
             var sortFilter = Builders<T>.Sort.Descending(sortName);
-            return await mongoCollection.Find<T>(filter).Sort(sortFilter).Skip((page - 1) * pageSize).Limit(50).ToListAsync();
+            return await mongoCollection.Find<T>(filter).Sort(sortFilter).Skip((page - 1) * pageSize).Limit(pageSize).ToListAsync();
         }
 
-        public long CountDocuments<T>(string conditionName, string conditionValue)
+        public async Task<long> CountDocuments<T>(string conditionName, string conditionValue)
         {
             var mongoCollection = mongoDatabase.GetCollection<T>(collectionName);
             var filter = Builders<T>.Filter.Eq(conditionName, conditionValue);
-            return mongoCollection.Find<T>(filter).CountDocuments();
+            return await mongoCollection.Find<T>(filter).CountDocumentsAsync();
         }
         #endregion
     }

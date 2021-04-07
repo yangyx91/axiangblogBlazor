@@ -37,4 +37,20 @@ namespace Data
 
         public int pageSize { get; set; }
     }
+
+    public class SaveOneBingImg_Request
+    {
+        public string imgId { get; set; }
+        public string CreateDate { get; set; }
+        public string Url { get; set; }
+        public string UrlBase { get; set; }
+        public string Domain { get; set; }
+        public string Title { get; set; }
+        public string Creator { get; set; }
+    }
+
+    public class CountOneBingImg_Request
+    {
+        public string imgId { get; set; }
+    }
 }

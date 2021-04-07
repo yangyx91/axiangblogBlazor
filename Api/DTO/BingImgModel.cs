@@ -17,4 +17,9 @@ namespace Api.DTO
         public string Title { get; set; }
         public string Creator { get; set; }
     }
+
+    public class CountOneBingImgCondition
+    {
+        public string imgId { get; set; }
+    }
 }

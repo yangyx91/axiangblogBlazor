@@ -15,13 +15,13 @@ using Api.Service;
 
 namespace Api.Functions
 {
-    public static class GetImgsFunction
+    public static class GetBingImgsFunction
     {
         private static Dao mDal = new Dao();
 
-        [FunctionName("GetImgsFunction")]
+        [FunctionName("GetBingImgsFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route ="allimgs")] HttpRequest req)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "allBingImgs")] HttpRequest req)
         {
             var res=await mDal.FindDocumentsByPage<BingImgModel>("Creator", "admin", "CreateDate");
             return new OkObjectResult(res); 

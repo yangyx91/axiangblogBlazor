@@ -1,4 +1,4 @@
-﻿@page "/bingimgs"
+﻿@page "/tempbingimgs"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Graph
 @inject HttpClient http
@@ -29,9 +29,10 @@
                 <footer class="blockquote-footer">@img.CreateDate</footer>
                 @if (user.Mail == "yang@axiangblog.com")
                 {
-                <div class="card-body">
-                    <button class="btn btn-primary" @onclick="(() => DelImg(img.imgId) )">删除图片</button>
-                </div>
+                    <div class="card-body">
+                        <button class="btn btn-primary" @onclick="(() => DelImg(img.imgId) )">删除图片</button>
+                        <button class="btn btn-primary" @onclick="(() => SaveImg(img) )">保存主库</button>
+                    </div>
                 }
             </div>
         </div>}}}
@@ -40,7 +41,9 @@
 
 
 
-    @code { private string imageName;
+@code { 
+    
+        private string imageName;
 
         private long upYunBucketUsage = 0;
 
@@ -95,4 +98,30 @@
             });
 
             var res = await apiRes.Content.ReadAsStringAsync();
-        } }
+        }
+
+
+        private async Task SaveImg(BingImgDocument img)
+        {
+            //判断主库是否存在
+            var apiRes = await http.PostAsJsonAsync<CountOneBingImg_Request>("api/countOneBingImg", new CountOneBingImg_Request()
+            {
+                imgId =img.imgId
+            });
+
+            var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res)&& Convert.ToInt64(res)==0)
+            {
+                await http.PostAsJsonAsync<SaveOneBingImg_Request>("api/saveBingImg", new SaveOneBingImg_Request()
+                {
+                    imgId = img.imgId,
+                    CreateDate = img.CreateDate,
+                    Creator = img.Creator,
+                    Domain = img.UrlBase,
+                    Url = img.Url,
+                    UrlBase = img.UrlBase
+                });
+            }
+        }
+}
