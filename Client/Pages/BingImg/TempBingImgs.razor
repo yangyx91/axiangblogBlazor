@@ -14,28 +14,29 @@
 
 <div class="col-sm-8">
 
-    @if (user != null)
+@if (user != null)
+{
+    @if (imageDocuments.Count > 0)
     {
-        @if (imageDocuments.Count > 0)
-        {
-        @foreach (var img in imageDocuments)
-        {
-        <div class="card">
-            <div class="card-header">@img.imgId</div>
-            <div class="card-body">
-                <img class="rounded m-1" src="@img.Url" />
-                <h5 class="card-title">@img.Title</h5>
-                <p class="card-text"><a href="@img.Url" class="card-link" target="_blank">@img.Url</a></p>
-                <footer class="blockquote-footer">@img.CreateDate</footer>
-                @if (user.Mail == "yang@axiangblog.com")
-                {
-                    <div class="card-body">
-                        <button class="btn btn-primary" @onclick="(() => DelImg(img.imgId) )">删除图片</button>
-                        <button class="btn btn-primary" @onclick="(() => SaveImg(img) )">保存主库</button>
-                    </div>
-                }
-            </div>
-        </div>}}}
+    @foreach (var img in imageDocuments)
+    {
+    <div class="card">
+        <div class="card-header">@img.imgId</div>
+        <div class="card-body">
+            <img class="rounded m-1" src="@img.Url" />
+            <h5 class="card-title">@img.Title</h5>
+            <p class="card-text"><a href="@img.Url" class="card-link" target="_blank">@img.Url</a></p>
+            <footer class="blockquote-footer">@img.CreateDate</footer>
+            @if (user.Mail == "yang@axiangblog.com")
+            {
+                <div class="card-body">
+                    <button class="btn btn-primary" @onclick="(() => DelImg(img.imgId) )">删除图片</button>
+                    <button class="btn btn-primary" @onclick="(() => SaveImg(img) )">保存主库</button>
+                </div>
+            }
+        </div>
+    </div>}}
+    }
 </div>
    
 

@@ -1,0 +1,202 @@
+﻿@page "/aliYunFiles"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Graph
+@inject GraphServiceClient GraphClient
+@inject HttpClient http
+
+
+<h3>阿里云OSS管理</h3>
+<p><button class="btn btn-primary" @onclick="GetWxUploads">获取列表</button></p>
+
+@if (wxUploadDocuments.Count > 0)
+{
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">_id</th>
+            <th scope="col">FileName</th>
+            <th scope="col">FileType</th>
+            <th scope="col">FileSize(单位：B)</th>
+            <th scope="col">UploadDate</th>
+            <th scope="col">FileID</th>
+            <th scope="col">FileID</th>
+            <th scope="col">Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var file in wxUploadDocuments)
+        {
+            var cutUrl = file.FileID + "?x-oss-process=image/resize,h_720,m_lfit/format,webp";
+        <tr>
+            <td>@file._id</td>
+            <td>@file.FileName</td>
+            <td>@file.FileType</td>
+            <td>@file.FileSize</td>
+            <td>@file.UploadDate</td>
+            <td><a href="@file.FileID" target="_blank">原图</a> </td>
+            <td><a href="@cutUrl" target="_blank">裁剪</a> </td>
+            <td>
+                @if (user.Mail == "yang@axiangblog.com")
+                {
+        <button class="btn btn-primary" @onclick="(() => DelImg(file.FileID) )">删除</button>                    }
+            </td>
+        </tr>}
+    </tbody>
+</table>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (page > 1)
+        {
+            <li class="page-item disabled">
+                <button class="btn btn-primary" @onclick="lastPage">上一页</button>
+            </li>
+            <li class="page-item">
+                <button class="btn btn-primary" @onclick="nextPage">下一页</button>
+            </li>
+            }
+        else
+        {
+            <li class="page-item">
+                <button class="btn btn-primary" @onclick="nextPage">下一页</button>
+            </li>
+            }
+    </ul>
+</nav>
+}
+
+
+@code { 
+
+    private int page = 1;
+
+    private int pageSize = 50;
+
+    private User user;
+
+    private IList<WxUploadDocument> wxUploadDocuments = new List<WxUploadDocument>();
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        var request = GraphClient.Me.Request();
+        user = await request.GetAsync();
+    }
+
+    private async Task GetWxUploads()
+    {
+        wxUploadDocuments = new List<WxUploadDocument>();
+        var apiRes = await http.PostAsJsonAsync<QueryWxUploadDocumentParams>("https://openapi.axiangblog.com/getUploadImg/v1/", new QueryWxUploadDocumentParams()
+        {
+            page = page,
+            pageSize = pageSize
+        });
+        var res = await apiRes.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrEmpty(res))
+        {
+            try
+            {
+                var wxUploadResult = System.Text.Json.JsonSerializer.Deserialize<UploadFile_Response>(res);
+
+                if (wxUploadResult != null && wxUploadResult.data != null && wxUploadResult.data.Count() > 0)
+                {
+                    var wxUploads = wxUploadResult.data;
+                    foreach (var wxUpload in wxUploads)
+                    {
+                        wxUploadDocuments.Add(wxUpload);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+        }
+    }
+
+    private async Task lastPage()
+    {
+        page--;
+        if (page > 0)
+        {
+
+            var apiRes = await http.PostAsJsonAsync<QueryWxUploadDocumentParams>("https://openapi.axiangblog.com/getUploadImg/v1/", new QueryWxUploadDocumentParams()
+            {
+                page = page,
+                pageSize = pageSize
+            });
+            var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res))
+            {
+                try
+                {
+                    var wxUploadResult = System.Text.Json.JsonSerializer.Deserialize<UploadFile_Response>(res);
+
+                    if (wxUploadResult != null && wxUploadResult.data != null && wxUploadResult.data.Count() > 0)
+                    {
+                        wxUploadDocuments=new List<WxUploadDocument>();
+                        var wxUploads = wxUploadResult.data;
+                        foreach (var wxUpload in wxUploads)
+                        {
+                            wxUploadDocuments.Add(wxUpload);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+
+            }
+        }
+    }
+
+    private async Task nextPage()
+    {
+        page++;
+        var apiRes = await http.PostAsJsonAsync<QueryWxUploadDocumentParams>("https://openapi.axiangblog.com/getUploadImg/v1/", new QueryWxUploadDocumentParams()
+        {
+            page = page,
+            pageSize = pageSize
+        });
+        var res = await apiRes.Content.ReadAsStringAsync();
+
+        if (!string.IsNullOrEmpty(res))
+        {
+            try
+            {
+                var wxUploadResult = System.Text.Json.JsonSerializer.Deserialize<UploadFile_Response>(res);
+
+                if (wxUploadResult != null && wxUploadResult.data != null && wxUploadResult.data.Count() > 0)
+                {
+                    wxUploadDocuments = new List<WxUploadDocument>();
+                    var wxUploads = wxUploadResult.data;
+                    foreach (var wxUpload in wxUploads)
+                    {
+                        wxUploadDocuments.Add(wxUpload);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+    }
+
+    private async Task DelImg(string fileId)
+    {
+        if (!string.IsNullOrEmpty(fileId))
+        {
+            var apiRes = await http.PostAsJsonAsync<DelWxUploadDocumentParams>("https://openapi.axiangblog.com/deleteUploadImg/v1/", new DelWxUploadDocumentParams()
+            {
+                imgUrl = fileId,
+            });
+        }
+    }
+}
