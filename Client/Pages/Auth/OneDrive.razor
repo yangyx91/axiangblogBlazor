@@ -15,6 +15,24 @@
 @if (driveItems.Count > 0)
 {
     <div class="form-group row">
+        <label class="col-sm-10 col-form-label">当前目录：@currentFolder</label>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">创建新目录：</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" @bind-value="newFolderName"/>
+        </div>
+        <button class="btn btn-primary" @onclick="(() => CreateFolder(parentId) )">Create</button>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">上传图片(4M以下)：</label>
+        <div class="col-sm-6">
+            <InputFile OnChange="@OnInputFileChange" multiple />
+        </div>
+        <label class="col-sm-2 col-form-label">进度:@uploadProcess</label>
+    </div>
+    <div class="form-group row">
         <label class="col-sm-10 col-form-label">当前选中文件：@selectFileName</label>
     </div>
     <div class="form-group row">
@@ -56,9 +74,9 @@
                     {
                         <button class="btn btn-primary" @onclick="(() => GetDownloadUrl(item.Id,item.Name) )">Get</button>
                     }
-                    @if (item.Folder != null&& item.Folder.ChildCount>0)
+                    @if (item.Folder != null&& item.Folder.ChildCount>=0)
                     {
-                <button class="btn btn-primary" @onclick="(() => GetChildren(item.Id) )">GetChildren</button>}
+                <button class="btn btn-primary" @onclick="(() => GetChildren(item.Id,item.Name) )">GetChildren</button>}
                     @if (isBack)
                     {
                         <button class="btn btn-primary" @onclick="(() => BackParentFolder(item.ParentReference.Id) )">Back</button>
@@ -79,6 +97,14 @@
 
     private string selectDownloadUrl="无";
 
+    private string currentFolder = "无";
+
+    private string newFolderName = "";
+
+    private string parentId = "";
+
+    private string uploadProcess = "";
+
     private IList<DriveItem> driveItems = new List<DriveItem>();
 
     protected async override Task OnInitializedAsync()
@@ -97,21 +123,27 @@
     {
         selectFileName = name;
         var driveItem = await GraphClient.Me.Drive.Items[id].Request().GetAsync();
-        if (driveItem!=null)
+
+        if (driveItem != null)
         {
             selectDownloadUrl = (string)driveItem.AdditionalData["@microsoft.graph.downloadUrl"];
         }
-
     }
 
-    private async Task GetChildren(string id)
+    private async Task GetChildren(string id,string folderName)
     {
+        currentFolder = folderName;
+        parentId = id;
         var request = GraphClient.Me.Drive.Items[id].Children.Request();
         var items = await request.GetAsync();
         if (items.Count()>0)
         {
             driveItems = items;
             isBack = true;
+        }
+        else
+        {
+            driveItems=new List<DriveItem>();
         }
     }
 
@@ -129,6 +161,114 @@
             }
 
             if (item.ParentReference.Id== "01LOLRCNV6Y2GOVW7725BZO354PWSELRRZ")
+            {
+                isBack = false;
+            }
+
+            newFolderName = "";
+            selectDownloadUrl = "";
+        }
+    }
+
+    private async Task CreateFolder(string parentId)
+    {
+        if (!string.IsNullOrEmpty(newFolderName))
+        {
+            var newFolder = new DriveItem
+            {
+                Name = newFolderName,
+                Folder = new Folder
+                {
+                },
+                AdditionalData = new Dictionary<string, object>()
+                {
+                    {"@microsoft.graph.conflictBehavior", "rename"}
+                }
+            };
+
+            var driveItem = await GraphClient.Me.Drive.Items[parentId].Children.Request()
+               .AddAsync(newFolder);
+
+            var items = await GraphClient.Me.Drive.Items[parentId].Children.Request().GetAsync();
+            if (items.Count() > 0)
+            {
+                driveItems = items;
+                isBack = true;
+            }
+
+            if (parentId == "01LOLRCNV6Y2GOVW7725BZO354PWSELRRZ")
+            {
+                isBack = false;
+            }
+
+            newFolderName = "";
+        }
+    }
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var maxAllowedFiles = 1;
+        long maxFileSize = 1024 * 1024 * 4;
+
+        if (!string.IsNullOrEmpty(parentId))
+        {
+            foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                var fileStream = imageFile.OpenReadStream(maxFileSize);
+
+
+                //using var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(@"The contents of the file goes here."));
+
+                await GraphClient.Me.Drive.Items[parentId].ItemWithPath("/" + imageFile.Name).Content
+                    .Request()
+                    .PutAsync<DriveItem>(fileStream);
+
+
+
+                //var uploadSession = await GraphClient.Me.Drive.Items[parentId].ItemWithPath("/" + imageFile.Name).CreateUploadSession().Request().PostAsync();
+
+                //// Max slice size must be a multiple of 320 KiB
+                //int maxSliceSize = 320 * 1024;
+                //var fileUploadTask =
+                //    new LargeFileUploadTask<DriveItem>(uploadSession, fileStream, maxSliceSize);
+
+                //// Create a callback that is invoked after each slice is uploaded
+                //IProgress<long> progress = new Progress<long>(prog =>
+                //{
+                //    uploadProcess = $"Uploaded {prog} bytes of {fileStream.Length} bytes";
+                //});
+
+                //try
+                //{
+                //    // Upload the file
+                //    var uploadResult = await fileUploadTask.UploadAsync(progress);
+
+                //    if (uploadResult.UploadSucceeded)
+                //    {
+                //        // The ItemResponse object in the result represents the
+                //        // created item.
+                //        uploadProcess = $"Upload complete, item ID: {uploadResult.ItemResponse.Id}";
+                //    }
+                //    else
+                //    {
+                //        uploadProcess = "Upload failed";
+                //    }
+                //}
+                //catch (ServiceException ex)
+                //{
+                //    uploadProcess = $"Error uploading: {ex.ToString()}";
+                //}
+
+            }
+
+            var items = await GraphClient.Me.Drive.Items[parentId].Children.Request().GetAsync();
+            if (items.Count() > 0)
+            {
+                driveItems = items;
+                isBack = true;
+            }
+
+            if (parentId == "01LOLRCNV6Y2GOVW7725BZO354PWSELRRZ")
             {
                 isBack = false;
             }
