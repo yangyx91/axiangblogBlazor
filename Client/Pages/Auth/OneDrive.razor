@@ -89,44 +89,67 @@
 
 @code {
 
-    private User user;
+            private User user;
 
-    private bool isBack = false;
+            private bool isBack = false;
 
-    private string selectFileName="无";
+            private string selectFileName="无";
 
-    private string selectDownloadUrl="无";
+            private string selectDownloadUrl="无";
 
-    private string currentFolder = "无";
+            private string currentFolder = "无";
 
-    private string newFolderName = "";
+            private string newFolderName = "";
 
-    private string parentId = "";
+            private string parentId = "";
 
-    private string uploadProcess = "";
+            private string uploadProcess = "";
 
-    private IList<DriveItem> driveItems = new List<DriveItem>();
+            private IList<DriveItem> driveItems = new List<DriveItem>();
 
-    protected async override Task OnInitializedAsync()
-    {
-        var request = GraphClient.Me.Request();
-        user = await request.GetAsync();
-    }
+            protected async override Task OnInitializedAsync()
+            {
+                var request = GraphClient.Me.Request();
+                user = await request.GetAsync();
+            }
 
-    private async Task GetFiles()
-    {
-        var request = GraphClient.Me.Drive.Root.Children.Request();
-        driveItems = await request.GetAsync();
-    }
+            private async Task GetFiles()
+            {
+                var request = GraphClient.Me.Drive.Root.Children.Request();
+                driveItems = await request.GetAsync();
+            }
 
-    private async Task GetDownloadUrl(string id,string name)
-    {
-        selectFileName = name;
-        var driveItem = await GraphClient.Me.Drive.Items[id].Request().GetAsync();
+            private async Task GetDownloadUrl(string id,string name)
+            {
+                selectFileName = name;
+                var driveItem = await GraphClient.Me.Drive.Items[id].Request().GetAsync();
 
-        if (driveItem != null)
-        {
-            selectDownloadUrl = (string)driveItem.AdditionalData["@microsoft.graph.downloadUrl"];
+                if (driveItem != null)
+                {
+                    selectDownloadUrl = (string)driveItem.AdditionalData["@microsoft.graph.downloadUrl"];
+
+                    var message = new Message
+                    {
+                        Subject = "系统邮件：当前选中文件：" + selectFileName,
+                        Body = new ItemBody
+                        {
+                            ContentType = BodyType.Text,
+                            Content = @"您好，你的下载直链URL已创建，请尽快下载：" +selectDownloadUrl
+                        },
+                        ToRecipients = new List<Recipient>()
+                        {
+                            new Recipient
+                            {
+                                EmailAddress = new EmailAddress
+                                {
+                                    Address = "yang.yx@email.cn"
+                                }
+                            }
+                        }
+                    };
+
+            var request = GraphClient.Me.SendMail(message, false).Request();
+            await request.PostAsync();
         }
     }
 
