@@ -123,7 +123,7 @@
     {
         if (!string.IsNullOrEmpty(PostId))
         {
-            var apiRes = await http.PostAsJsonAsync<QueryWxPostParams>("https://openapi.axiangblog.com/getWxPosts/v1/", new QueryWxPostParams()
+            var apiRes = await http.PostAsJsonAsync<QueryWxPostParams>("https://openapi.axiangblog.com/wxPostApi/v1/getWxPosts", new QueryWxPostParams()
             {
                 postId=PostId
             });
@@ -157,7 +157,7 @@
             wxPost.PostId = "";
         }
         wxPostTypeDocuments = new List<WxPostTypeDocument>();
-        var apiwxPostTypeRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/getWxPostTypes/v1/", new QueryWxPostTypeParams()
+        var apiwxPostTypeRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
         {
             postType = "",
             postTypeId = ""
@@ -194,7 +194,7 @@
         if (!string.IsNullOrEmpty(wxPost.Title)&& !string.IsNullOrEmpty(wxPost.PostId))
         {
             wxPost.PostDate = wxPost.PostDateTime.ToString("yyyy-MM-dd");
-            var apiRes = await http.PostAsJsonAsync<WxPostDocument>("https://openapi.axiangblog.com/editWxPost/v1/", wxPost);
+            var apiRes = await http.PostAsJsonAsync<WxPostDocument>("https://openapi.axiangblog.com/wxPostApi/v1/editWxPost", wxPost);
             var res = await apiRes.Content.ReadAsStringAsync();
 
             if (!string.IsNullOrEmpty(res))
