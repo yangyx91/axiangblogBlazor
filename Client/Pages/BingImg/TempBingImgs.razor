@@ -60,7 +60,7 @@
 
         private async Task GetImgs()
         {
-            var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.com/bingImgsApi/v1/getBingImgs", new QueryBingImgParams()
+            var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.cn/bingImgsApi/v1/getBingImgs", new QueryBingImgParams()
             {
                 page = 1,
                 pageSize = 50
@@ -93,7 +93,7 @@
 
         private async Task DelImg(string imgId)
         {
-            var apiRes = await http.PostAsJsonAsync<DelBingImg_Request>("https://openapi.axiangblog.com/bingImgsApi/v1/getBingImgs", new DelBingImg_Request()
+            var apiRes = await http.PostAsJsonAsync<DelBingImg_Request>("https://openapi.axiangblog.cn/bingImgsApi/v1/getBingImgs", new DelBingImg_Request()
             {
                 imgId = imgId
             });

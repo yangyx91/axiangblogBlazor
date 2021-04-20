@@ -114,7 +114,7 @@
     protected async override Task OnInitializedAsync()
     {
         wxPostTypeDocuments = new List<WxPostTypeDocument>();
-        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
+        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.cn/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
         {
             postType = "",
             postTypeId = ""
@@ -151,7 +151,7 @@
         if (!string.IsNullOrEmpty(wxPost.Title))
         {
             wxPost.PostDate = wxPost.PostDateTime.ToString("yyyy-MM-dd");
-            var apiRes = await http.PostAsJsonAsync<WxPostDocument>("https://openapi.axiangblog.com/wxPostApi/v1/editWxPost", wxPost);
+            var apiRes = await http.PostAsJsonAsync<WxPostDocument>("https://openapi.axiangblog.cn/wxPostApi/v1/editWxPost", wxPost);
             var res = await apiRes.Content.ReadAsStringAsync();
 
             if (!string.IsNullOrEmpty(res))

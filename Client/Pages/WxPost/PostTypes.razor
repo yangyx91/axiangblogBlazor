@@ -74,7 +74,7 @@
     private async Task GetPostTypes()
     {
         wxPostDocuments= new List<WxPostTypeDocument>();
-        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
+        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.cn/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
         {
             postType="",
             postTypeId=""
@@ -111,7 +111,7 @@
         if (page>0)
         {
 
-            var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
+            var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.cn/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
             {
                 postType = "",
                 postTypeId = ""
@@ -147,7 +147,7 @@
     private async Task nextPage()
     {
         page++;
-        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.com/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
+        var apiRes = await http.PostAsJsonAsync<QueryWxPostTypeParams>("https://openapi.axiangblog.cn/wxPostTypeApi/v1/getWxPostTypes", new QueryWxPostTypeParams()
         {
             postType = "",
             postTypeId = ""
