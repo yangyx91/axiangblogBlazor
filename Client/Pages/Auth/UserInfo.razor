@@ -14,28 +14,65 @@
     <p>DisplayName: @user.DisplayName</p>
     <p>Mail: @user.Mail</p>
     <button class="btn btn-primary" @onclick="WelcomeMail">Send Welcome Mail</button>
+    @if (user.Mail=="yang.yx@axiangblog.cn") 
+    { 
+    <button class="btn btn-primary" @onclick="GetMyMail">Get My Mails</button>
+    }
+}
+
+
+@if (messages.Count>=0)
+{
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Address</th>
+            <th scope="col">Subject</th>
+            <th scope="col">BodyPreview</th>
+            <th scope="col">ReceivedDate</th>
+            <th scope="col">HasAttachment</th>
+            <th scope="col">Read</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var msg in messages)
+        {
+            <tr>
+                <td>@msg.From.EmailAddress.Name</td>
+                <td>@msg.From.EmailAddress.Address</td>
+                <td>@msg.Subject</td>
+                <td>@msg.BodyPreview</td>
+                <td>@msg.ReceivedDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@msg.HasAttachments.Value</td>
+                <td><a href="@msg.WebLink" target="_blank">Read</a></td>
+            </tr>}
+    </tbody>
+</table>	 
 }
 
 @code {
-        private User user;
+    private User user;
 
-        protected async override Task OnInitializedAsync()
-        {
-            var request = GraphClient.Me.Request();
-            user = await request.GetAsync();
-        }
+    private IList<Message> messages = new List<Message>();
 
-        private async Task WelcomeMail()
+    protected async override Task OnInitializedAsync()
+    {
+        var request = GraphClient.Me.Request();
+        user = await request.GetAsync();
+    }
+
+    private async Task WelcomeMail()
+    {
+        var message = new Message
         {
-            var message = new Message
+            Subject = "用户登录站点提醒",
+            Body = new ItemBody
             {
-                Subject = "用户登录站点提醒",
-                Body = new ItemBody
-                {
-                    ContentType = BodyType.Text,
-                    Content = string.Format("当前用户名:{0},登陆时间：{1}",user.UserPrincipalName,DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
-                },
-                ToRecipients = new List<Recipient>()
+                ContentType = BodyType.Text,
+                Content = string.Format("当前用户名:{0},登陆时间：{1}",user.UserPrincipalName,DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
+            },
+            ToRecipients = new List<Recipient>()
                 {
                     new Recipient
                     {
@@ -45,9 +82,23 @@
                         }
                     }
                 }
-            };
+        };
 
-                var request = GraphClient.Me.SendMail(message,false).Request();
-                await request.PostAsync();
+        var request = GraphClient.Me.SendMail(message,false).Request();
+        await request.PostAsync();
+    }
+
+    private async Task GetMyMail()
+    {
+
+        var res = await GraphClient.Me.Messages
+            .Request()
+            .GetAsync();
+
+        if (res.Count>=0)
+        {
+            messages = res.CurrentPage;
         }
+    }
+
 }
