@@ -40,4 +40,9 @@ namespace Data
 
         public string title { get; set; }
     }
+
+    public class DelWxPostParams
+    {
+        public string postId { get; set; }
+    }
 }

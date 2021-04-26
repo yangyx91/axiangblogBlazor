@@ -23,9 +23,9 @@
         <div class="card">
             <div class="card-header">@post.PostId</div>
             <div class="card-body">
-                <img class="rounded m-1" src="@post.Thumbnail" />
+                @*<img class="rounded m-1" src="@post.Thumbnail" />*@
                 <h5 class="card-title">@post.Title</h5>
-                <p class="card-text">@post.Description</p>
+                @*<p class="card-text">@post.Description</p>*@
                 <p class="card-text"><small class="text-muted"></small></p>
                 <footer class="blockquote-footer">@post.Author,@post.PostDate</footer>
             </div>
@@ -37,7 +37,8 @@
             <div class="card-body">
                 <a href="@post.PostUrl" class="card-link" target="_blank">Read</a>
                 <a href="@navLink" class="card-link">Edit</a>
-          </div>
+                <a href="" @onclick="(() => DelPost(post.PostId) )">Delete</a>
+            </div>
         </div>
         }
    
@@ -153,6 +154,26 @@
                 }
             }
 
+            private async Task DelPost(string postId)
+            {
+                if (!string.IsNullOrEmpty(postId))
+                {
+                    var apiRes = await http.PostAsJsonAsync<DelWxPostParams>("https://openapi.axiangblog.cn/wxPostApi/v1/delWxPost", new DelWxPostParams()
+                            {
+                                postId=postId
+                            });
+                    var res = await apiRes.Content.ReadAsStringAsync();
+
+                    if (res != null)
+                    {
+                         if(wxPostDocuments.Where(x => x.PostId == postId).Count() > 0)
+                        {
+                            wxPostDocuments.Remove(wxPostDocuments.Where(x => x.PostId == postId).FirstOrDefault());
+                        }
+                    }
+                }
+            }
+
             private async Task lastPage()
             {
                 page--;
@@ -224,4 +245,5 @@
                         throw;
                     }
                 }
-            } }
+            } 
+    }

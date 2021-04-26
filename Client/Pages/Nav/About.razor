@@ -1,13 +1,50 @@
 ﻿@page  "/about"
+@inject HttpClient http
 
 <h3>About</h3>
-
+<p><button class="btn btn-primary" @onclick="GetImgs">获取订阅号推文</button></p>
+<p>currentOffset:@currentOffset</p>
+<p>apiRes:@apiRes</p>
 
 <iframe src="https://powerva.microsoft.com/webchat/bots/97151836-c0cf-43ed-a939-43794e279feb" frameborder="0" style="width: 100%; height: 100%;"></iframe>
 
 
 <p>Powered by @netVersionDesc</p>
 
-@code {
+@code { 
+
+    private string currentOffset;
+
+    private string apiRes;
+
     private string netVersionDesc = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
+
+
+    private async Task GetImgs()
+    {
+        for (int i = 106; i >=0; i--)
+        {
+            currentOffset = i.ToString();
+
+            var imgResult = await http.PostAsJsonAsync<QueryMaterialParams>("https://openapi.axiangblog.cn/weixinToken/v1/batchgetmaterial", new QueryMaterialParams()
+            {
+                offset = i.ToString(),
+            }
+            );
+
+            var res = await imgResult.Content.ReadAsStringAsync();
+
+            if (!string.IsNullOrEmpty(res))
+            {
+                apiRes = res;
+            }
+
+        }
+    }
+
+    public class QueryMaterialParams
+    {
+        public string offset { get; set; }
+    }
+
 }
