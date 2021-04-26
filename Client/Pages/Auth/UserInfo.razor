@@ -14,7 +14,7 @@
     <p>DisplayName: @user.DisplayName</p>
     <p>Mail: @user.Mail</p>
     <button class="btn btn-primary" @onclick="WelcomeMail">Send Welcome Mail</button>
-    @if (user.Mail=="yang@axiangblog.cn") 
+    @if (user.Mail=="yang@axiangblog.cn" || user.UserPrincipalName=="yang.yx91@live.cn") 
     { 
     <button class="btn btn-primary" @onclick="GetMyMail">Get My Mails</button>
     }
