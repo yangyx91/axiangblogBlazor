@@ -55,6 +55,7 @@ internal static class GraphClientExtensions
                    Scopes= new[]{ 
                        "profile", 
                        "openid", 
+                       "email",
                        "https://graph.microsoft.com/User.Read", 
                        "https://graph.microsoft.com/User.Read.All", 
                        "https://graph.microsoft.com/User.ReadWrite.All", 
