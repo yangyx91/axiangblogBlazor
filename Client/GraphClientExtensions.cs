@@ -58,7 +58,10 @@ internal static class GraphClientExtensions
                        "https://graph.microsoft.com/User.Read", 
                        "https://graph.microsoft.com/User.Read.All", 
                        "https://graph.microsoft.com/User.ReadWrite.All", 
-                       "https://graph.microsoft.com/Mail.Send"
+                       "https://graph.microsoft.com/Mail.Send",
+                       "https://graph.microsoft.com/Files.ReadWrite.All",
+                       "https://graph.microsoft.com/Mail.ReadWrite"
+
                    }
                 });
 
