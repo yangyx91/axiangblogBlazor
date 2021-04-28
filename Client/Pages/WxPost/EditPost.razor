@@ -43,7 +43,15 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Topic:</label>
             <div class="col-sm-6">
-                <InputText @bind-Value="wxPost.Topic" class="form-control" />
+                <InputSelect @bind-Value="wxPost.Topic" class="form-control">
+                    <option value="">Select ...</option>
+                    @if (wxPostTypeDocuments.Count() > 0)
+                    {
+                        foreach (var wxPostType in wxPostTypeDocuments)
+                        {
+                            <option value="@wxPostType.PostType">@wxPostType.PostType</option>}
+                    }
+                </InputSelect>
             </div>
         </div>
         <div class="form-group row">
