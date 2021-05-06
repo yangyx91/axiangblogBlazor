@@ -93,12 +93,17 @@
 
         private async Task DelImg(string imgId)
         {
-            var apiRes = await http.PostAsJsonAsync<DelBingImg_Request>("https://openapi.axiangblog.cn/bingImgsApi/v1/getBingImgs", new DelBingImg_Request()
+            var apiRes = await http.PostAsJsonAsync<DelBingImg_Request>("https://openapi.axiangblog.cn/bingImgsApi/v1/delBingImgs", new DelBingImg_Request()
             {
-                imgId = imgId
+                imgId = imgId 
             });
 
             var res = await apiRes.Content.ReadAsStringAsync();
+
+            if (imageDocuments.Where(x=>x.imgId==imgId).Count()>0)
+            {
+              imageDocuments.Remove(imageDocuments.Where(x=>x.imgId==imgId).FirstOrDefault());
+            }
         }
 
 
