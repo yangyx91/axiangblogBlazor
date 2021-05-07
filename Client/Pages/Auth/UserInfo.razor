@@ -54,7 +54,7 @@
 @code {
     private User user;
 
-    private IList<Message> messages = new List<Message>();
+    private IList<Microsoft.Graph.Message> messages = new List<Microsoft.Graph.Message>();
 
     protected async override Task OnInitializedAsync()
     {
@@ -64,7 +64,7 @@
 
     private async Task WelcomeMail()
     {
-        var message = new Message
+        var message = new Microsoft.Graph.Message
         {
             Subject = "用户登录站点提醒",
             Body = new ItemBody

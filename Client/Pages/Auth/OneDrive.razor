@@ -128,7 +128,7 @@
                 {
                     selectDownloadUrl = (string)driveItem.AdditionalData["@microsoft.graph.downloadUrl"];
 
-                    var message = new Message
+                    var message = new Microsoft.Graph.Message
                     {
                         Subject = "系统邮件：当前选中文件：" + selectFileName,
                         Body = new ItemBody

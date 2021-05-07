@@ -1,109 +1,69 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">爱囤货的象叔叔</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="expand-menu" href="upyImgs">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>又拍云管理
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="upload">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>又拍云上传
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="expand-menu" href="aliYunFiles">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>OSS管理
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="expand-menu" href="bingimgs">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>BingImgs主库
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="tempbingimgs">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>BingImgs分库
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="todayBingImg">
-                <span class="oi oi-plus" aria-hidden="true"></span>今日美图
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="loadmap">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>必应地图
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="chat">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>聊天室
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="expand-menu" href="wxposts">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>文章管理
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="addwxpost">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>新建文章
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="expand-menu" href="wxpostTypes">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>话题管理
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="addwxpostType">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>新建话题
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="expand-menu" href="onedrive">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>OneDrive
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="user">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>个人资料
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="about">
-                <span class="oi oi-list-rich" aria-hidden="true"></span>关于
-            </NavLink>
-        </li>
-    </ul>
-</div>
+﻿
+<Menu Items="@IconSideMenuItems" DisableNavigation="false" IsVertical="true" IsCollapsed="@IsCollapsed" />
 
 @code {
-    [Parameter] 
-    public string Title { get; set; } 
+    [Parameter]
+    public string Title { get; set; }
+
+    private bool IsCollapsed = false;
+
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+    private IList<MenuItem> IconSideMenuItems = new List<MenuItem>();
+
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        //wxposts
+        var wxposts = new MenuItem(){ Text = "文章管理"};
+
+        wxposts.AddItem(new MenuItem() { Text = "文章列表",Url = "/wxposts"});
+        wxposts.AddItem(new MenuItem(){ Text = "新建文章",Url = "/addwxpost"});
+
+        IconSideMenuItems.Add(wxposts);
+
+        var wxpostTypes = new MenuItem() { Text = "话题管理" };
+
+        wxpostTypes.AddItem(new MenuItem() { Text = "话题列表", Url = "/wxpostTypes" });
+        wxpostTypes.AddItem(new MenuItem() { Text = "新建话题", Url = "/addwxpostType" });
+
+        IconSideMenuItems.Add(wxposts);
+
+        var graph = new MenuItem() { Text = "Graph Restapi" };
+        graph.AddItem(new MenuItem() { Text = "OneDrive", Url = "/onedrive" });
+        graph.AddItem(new MenuItem() { Text = "个人资料", Url = "/user" });
+
+        IconSideMenuItems.Add(graph);
+
+        var bingImgs = new MenuItem() { Text = "必应图片" };
+        bingImgs.AddItem(new MenuItem() { Text = "BingImgs主库", Url = "/bingimgs" });
+        bingImgs.AddItem(new MenuItem() { Text = "BingImgs分库", Url = "/tempbingimgs" });
+        bingImgs.AddItem(new MenuItem() { Text = "今日美图", Url = "/todayBingImg" });
+
+        IconSideMenuItems.Add(bingImgs);
+
+        var upload = new MenuItem() { Text = "素材管理" };
+        upload.AddItem(new MenuItem() { Text = "OSS管理", Url = "/aliYunFiles" });
+        upload.AddItem(new MenuItem() { Text = "又拍云管理", Url = "/upyImgs" });
+        upload.AddItem(new MenuItem() { Text = "又拍云上传", Url = "/upload" });
+
+        IconSideMenuItems.Add(upload);
+
+        var publicService = new MenuItem() { Text = "其他服务" };
+        publicService.AddItem(new MenuItem() { Text = "必应地图", Url = "/loadmap" });
+        publicService.AddItem(new MenuItem() { Text = "聊天室", Url = "/chat" });
+
+        IconSideMenuItems.Add(publicService);
+
+
+
+
+
     }
 }

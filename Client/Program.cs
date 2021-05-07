@@ -29,6 +29,9 @@ namespace Client
                 options.ProviderOptions.DefaultAccessTokenScopes.Add("openid");
                 options.ProviderOptions.DefaultAccessTokenScopes.Add("offline_access");
             });
+
+            //×¢²á·þÎñ
+            builder.Services.AddBootstrapBlazor();
             
             await builder.Build().RunAsync();
         }

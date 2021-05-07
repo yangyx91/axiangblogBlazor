@@ -1,24 +1,46 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager navimanager
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<Layout ShowFooter="true" ShowGotoTop="true" SideWidth="200px">
+    <Header >
+        <div class="text-right header" style="height:50px">
 
-    <div class="main">
-        <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            <a style="padding: 4px 12px; color: #fff; background-color: #1ab394; border-color: #1ab394; border-radius: 4px;" class="" title="点击展开收缩左侧菜单">
+                <i class="fa fa-bars"></i>
+            </a>
             <LoginDisplay />
+            <a href="/about" target="_blank" class="ml-md-auto">About</a>
+            <a class="navbar-brand" href="">爱囤货的象叔叔</a>
         </div>
+    </Header>
+    <Side>
+        <div class="text-center side" style="font-size:16px">
+            <NavMenu/>
+        </div>
+    </Side>
+    <Main>
+        <div class="text-center main" style="min-height:600px;min-width:800px;">@Body</div>
+    </Main>
+    <Footer>
+        <div class="text-center footer" style="height:100px;display:list-item">
+            <p style="text-align: center;">
+                © 2020-2021 阿象博客.All rights reserved.
+                <br />Azure静态Web+Cloudflare<br />
+                本网站由<a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank"><img border="0" height="19px" src="upyun_logos/logo.png" alt="又拍云" title="又拍云" /></a>提供CDN加速/云存储服务<br />
+                苏ICP备15012809号-1
+            </p>
+        </div>
+    </Footer>
+</Layout>
 
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
-</div>
-<footer>
-    <p style="text-align: center;">© 2020-2021 阿象博客.All rights reserved.</p>
-    <p style="text-align: center;color: #3f2863">Azure静态Web+Cloudflare</p>
-    <p style="text-align: center;color: #3f2863">本网站由<a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank"><img border="0" height="19px" src="upyun_logos/logo.png" alt="又拍云" title="又拍云" /></a>提供CDN加速/云存储服务</p>
-    <p style="text-align: center;color: #3f2863">苏ICP备15012809号-1</p>
-</footer>
+@code{
+
+    private string CollapseClass = "collapse";
+
+    
+
+    public void CollapseMenu()
+    {
+        
+    }
+}
