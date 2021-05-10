@@ -19,7 +19,16 @@ namespace Client
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-            builder.Services.AddGraphClient("profile", "openid", "https://graph.microsoft.com/User.Read", "https://graph.microsoft.com/User.Read.All", "https://graph.microsoft.com/User.ReadWrite.All", "https://graph.microsoft.com/Mail.Send");
+            builder.Services.AddGraphClient(
+                "profile",
+                "openid",
+                "email",
+                "https://graph.microsoft.com/User.Read", 
+                "https://graph.microsoft.com/User.Read.All", 
+                "https://graph.microsoft.com/User.ReadWrite.All", 
+                "https://graph.microsoft.com/Mail.Send",
+                "https://graph.microsoft.com/Files.ReadWrite.All",
+                "https://graph.microsoft.com/Mail.ReadWrite");
 
             //集成微软账户Authentication
             builder.Services.AddMsalAuthentication(options =>
@@ -30,7 +39,7 @@ namespace Client
                 options.ProviderOptions.DefaultAccessTokenScopes.Add("offline_access");
             });
 
-            //注册服务
+            //注册BootstrapBlazor服务
             builder.Services.AddBootstrapBlazor();
             
             await builder.Build().RunAsync();
