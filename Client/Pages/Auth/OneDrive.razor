@@ -41,6 +41,12 @@
                 <textarea class="form-control" rows="5">@selectDownloadUrl</textarea>
             </div>
     </div>
+     <div class="form-group row">
+        <label class="col-sm-2 col-form-label">预览直链URL：</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" rows="5">@selectPreviewUrl</textarea>
+            </div>
+    </div>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -97,6 +103,8 @@
 
             private string selectDownloadUrl="无";
 
+            private string selectPreviewUrl="无";
+
             private string currentFolder = "无";
 
             private string newFolderName = "";
@@ -121,13 +129,14 @@
 
             private async Task GetDownloadUrl(string id,string name)
             {
+                var previewInfo=await GraphClient.Me.Drive.Items[id].Preview("0").Request().PostAsync();  
                 selectFileName = name;
                 var driveItem = await GraphClient.Me.Drive.Items[id].Request().GetAsync();
 
-                if (driveItem != null)
+                if (driveItem != null || previewInfo!=null)
                 {
                     selectDownloadUrl = (string)driveItem.AdditionalData["@microsoft.graph.downloadUrl"];
-
+                    selectPreviewUrl=previewInfo.GetUrl;
                     var message = new Microsoft.Graph.Message
                     {
                         Subject = "系统邮件：当前选中文件：" + selectFileName,
