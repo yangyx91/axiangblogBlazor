@@ -5,7 +5,7 @@
 @inject GraphServiceClient GraphClient
 @inject HttpClient http
 
-
+<title>[Graph]用户信息</title>
 <h3>[Graph]用户信息</h3>
 
 @if (user != null)
@@ -16,7 +16,7 @@
     <p>Mail: @user.Mail</p>
     <p><button class="btn btn-primary" @onclick="WelcomeMail">Send Welcome Mail</button></p>
     <p><button class="btn btn-primary" @onclick="GetMyMail">Get My Mails</button></p>
-    @if(user.DisplayName=="yang@axiangblog.cn" || user.DisplayName=="yang.yx91@live.cn") { 
+    @if(user.UserPrincipalName=="yang@axiangblog.cn" || user.UserPrincipalName == "yang.yx91@live.cn") {
          <p><button class="btn btn-primary" @onclick="GetAllUsers">Get Users</button></p>
     }
     
