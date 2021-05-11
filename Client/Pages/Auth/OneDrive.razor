@@ -62,9 +62,12 @@
                 {
                     <td>Folder</td> 
                 }
-                else
+                else if(item.File!=null)
                 {
                     <td>@item.File.MimeType</td>
+                }
+                else{
+                    <td>@item.Package.Type</td>
                 }
                 <td>@item.Size</td>
                 <td>@item.CreatedDateTime.Value.ToString("yyyy-MM-dd HH:mm:ss")</td>
