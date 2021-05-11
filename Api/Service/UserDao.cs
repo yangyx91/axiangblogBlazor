@@ -14,7 +14,7 @@ namespace Api.Service
         {
             using (System.Data.IDbConnection conn=new System.Data.SqlClient.SqlConnection(connectionString))
             {
-                var selectSql = @"SELECT TOP @pageSize 
+                var selectSql =string.Format( @"SELECT TOP {0} 
                             Row_Number() over(order by ID) as ID
                           ,UserID
                           ,DisplayName
@@ -27,8 +27,9 @@ namespace Api.Service
                           ,Phone
                           ,CreateTime
                           ,IsDelete
-                      FROM dbo.UserInfos (nolock) where ID>@number";
-                return conn.Query<UserInfoModel>(selectSql, new { pageSize=pageSize,number=(page-1)*pageSize  }); ;
+                      FROM dbo.UserInfos (nolock) where ID>{1}",pageSize,(page-1)*pageSize);
+
+                return conn.Query<UserInfoModel>(selectSql); 
             }
         }
 
