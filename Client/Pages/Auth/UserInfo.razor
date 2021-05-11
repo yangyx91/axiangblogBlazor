@@ -3,6 +3,7 @@
 @using Microsoft.Graph
 @attribute [Authorize]
 @inject GraphServiceClient GraphClient
+@inject HttpClient http
 
 
 <h3>[Graph]用户信息</h3>
@@ -13,11 +14,12 @@
     <p>UserPrincipalName: @user.UserPrincipalName</p>
     <p>DisplayName: @user.DisplayName</p>
     <p>Mail: @user.Mail</p>
-    <button class="btn btn-primary" @onclick="WelcomeMail">Send Welcome Mail</button>
-    @if (user.Mail=="yang@axiangblog.cn" || user.UserPrincipalName=="yang.yx91@live.cn") 
-    { 
-    <button class="btn btn-primary" @onclick="GetMyMail">Get My Mails</button>
+    <p><button class="btn btn-primary" @onclick="WelcomeMail">Send Welcome Mail</button></p>
+    <p><button class="btn btn-primary" @onclick="GetMyMail">Get My Mails</button></p>
+    @if(user.DisplayName=="yang@axiangblog.cn" || user.DisplayName=="yang.yx91@live.cn") { 
+         <p><button class="btn btn-primary" @onclick="GetAllUsers">Get Users</button></p>
     }
+    
 }
 
 
@@ -99,6 +101,12 @@
         {
             messages = res.CurrentPage;
         }
+    }
+
+    private async Task GetAllUsers()
+    {
+        var userResult = await http.GetFromJsonAsync<List<UserInfoDocument>>("api/getusers");
+       
     }
 
 }
