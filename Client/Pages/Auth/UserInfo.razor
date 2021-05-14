@@ -92,10 +92,9 @@
 
     private async Task GetMyMail()
     {
-
         var res = await GraphClient.Me.Messages
-            .Request()
-            .GetAsync();
+        .Request()
+        .GetAsync();
 
         if (res.Count>=0)
         {
@@ -106,7 +105,7 @@
     private async Task GetAllUsers()
     {
         var userResult = await http.GetFromJsonAsync<List<UserInfoDocument>>("api/getusers");
-       
+
     }
 
 }
