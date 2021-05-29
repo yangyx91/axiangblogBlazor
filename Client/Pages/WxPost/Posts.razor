@@ -83,7 +83,7 @@
             private async Task GetPosts()
             {
                 wxPostDocuments = new List<WxPostDocument>();
-                var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.cn/wxPostApi/v1/getWxPosts", new QueryBingImgParams()
+                var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://api.axiangblog.cn/getWxPosts", new QueryBingImgParams()
                 {
                     page = page,
                     pageSize = pageSize
@@ -119,7 +119,7 @@
                 if (!string.IsNullOrEmpty(wxPost.Title))
                 {
                     wxPostDocuments = new List<WxPostDocument>();
-                    var apiRes = await http.PostAsJsonAsync<QueryWxPostParams>("https://openapi.axiangblog.cn/wxPostApi/v1/getWxPosts", new QueryWxPostParams()
+                    var apiRes = await http.PostAsJsonAsync<QueryWxPostParams>("https://api.axiangblog.cn/getWxPosts", new QueryWxPostParams()
                     {
                         page = page,
                         pageSize = pageSize,
@@ -158,7 +158,7 @@
             {
                 if (!string.IsNullOrEmpty(postId))
                 {
-                    var apiRes = await http.PostAsJsonAsync<DelWxPostParams>("https://openapi.axiangblog.cn/wxPostApi/v1/delWxPost", new DelWxPostParams()
+                    var apiRes = await http.PostAsJsonAsync<DelWxPostParams>("https://api.axiangblog.cn/delWxPost", new DelWxPostParams()
                             {
                                 postId=postId
                             });
@@ -180,7 +180,7 @@
                 if (page > 0)
                 {
 
-                    var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.cn/wxPostApi/v1/getWxPosts", new QueryBingImgParams()
+                    var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://api.axiangblog.cn/getWxPosts", new QueryBingImgParams()
                     {
                         page = page,
                         pageSize = pageSize
@@ -216,7 +216,7 @@
             private async Task nextPage()
             {
                 page++;
-                var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://openapi.axiangblog.cn/wxPostApi/v1/getWxPosts", new QueryBingImgParams()
+                var apiRes = await http.PostAsJsonAsync<QueryBingImgParams>("https://api.axiangblog.cn/getWxPosts", new QueryBingImgParams()
                 {
                     page = page,
                     pageSize = pageSize
