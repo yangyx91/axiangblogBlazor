@@ -20,7 +20,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        //wxposts
+        //wxposts   
         var wxposts = new MenuItem(){ Text = "文章管理"};
 
         wxposts.AddItem(new MenuItem() { Text = "文章列表",Url = "/wxposts"});
@@ -33,7 +33,7 @@
         wxpostTypes.AddItem(new MenuItem() { Text = "话题列表", Url = "/wxpostTypes" });
         wxpostTypes.AddItem(new MenuItem() { Text = "新建话题", Url = "/addwxpostType" });
 
-        IconSideMenuItems.Add(wxposts);
+        IconSideMenuItems.Add(wxpostTypes);
 
         var graph = new MenuItem() { Text = "Graph Restapi" };
         graph.AddItem(new MenuItem() { Text = "OneDrive", Url = "/onedrive" });

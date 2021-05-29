@@ -26,7 +26,7 @@
         {
             currentOffset = i.ToString();
 
-            var imgResult = await http.PostAsJsonAsync<QueryMaterialParams>("https://api.axiangblog.cn/batchgetmaterial", new QueryMaterialParams()
+            var imgResult = await http.PostAsJsonAsync<QueryMaterialParams>("https://openapi.axiangblog.cn/bingImgsApi/v1/batchgetmaterial", new QueryMaterialParams()
             {
                 offset = i.ToString(),
             }
