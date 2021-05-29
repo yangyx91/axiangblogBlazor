@@ -41,7 +41,7 @@ namespace Client
 
             //×¢²áBootstrapBlazor·þÎñ
             builder.Services.AddBootstrapBlazor();
-            
+
             await builder.Build().RunAsync();
         }
     }
