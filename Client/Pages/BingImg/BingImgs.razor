@@ -1,15 +1,10 @@
-﻿@page "/bingimgs"
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.Graph
+@page "/bingimgs"
+
 @inject HttpClient http
-@attribute [Authorize]
-@inject GraphServiceClient GraphClient
 
 <h3>Imgs</h3>
 <p><button class="btn btn-primary" @onclick="GetImgs">获取图片</button></p>
 
-@if (user != null)
-{
 @if (imageDocuments.Count > 0)
     {
 <h4>Images</h4>
@@ -28,7 +23,7 @@
     </div>
 </div>
     }
-}
+
 
 
 
@@ -36,17 +31,7 @@
 
     private string imageName;
 
-    private long upYunBucketUsage = 0;
-
     private IList<ImgDocument> imageDocuments = new List<ImgDocument>();
-
-    private User user;
-
-    protected async override Task OnInitializedAsync()
-    {
-        var request = GraphClient.Me.Request();
-        user = await request.GetAsync();
-    }
 
     private async Task GetImgs()
     {
