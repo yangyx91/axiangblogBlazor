@@ -7,3 +7,5 @@
 /Data/obj
 /Data/bin/Debug/net5.0
 /Data/bin/Debug/netstandard2.1
+/Client/bin/Debug/net6.0
+/.vs/axiangblogBlazor
