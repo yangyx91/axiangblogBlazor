@@ -1,5 +1,5 @@
 ﻿# axiangblogBlazor
-Net 5.0 + Blazor搭建
+Net 6.0 + Blazor搭建
 
 
 #--查看SQL版本
