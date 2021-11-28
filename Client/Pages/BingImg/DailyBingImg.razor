@@ -35,7 +35,7 @@
 
     private async Task GetTodayBingImg()
     {
-        var apiRes = await http.PostAsync("https://openapi.axiangblog.cn/bingImgsApi/v1/dailyBingImg", null);
+        var apiRes = await http.PostAsync("https://72617af9-beba-4a09-8f3a-1e026fd1eff9.bspapp.com/http/dailyBingImg", null);
 
         var res=await apiRes.Content.ReadAsStringAsync();
         if (!string.IsNullOrEmpty(res))

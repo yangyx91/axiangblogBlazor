@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Client",
+    "\\Client\\Pages",
+    "\\Client\\Pages\\Nav"
   ],
-  "SelectedNode": "\\axiangblogBlazor.sln",
+  "SelectedNode": "\\Client\\Pages\\Nav\\About.razor",
   "PreviewInSolutionExplorer": false
 }
