@@ -27,7 +27,7 @@
             <h5 class="card-title">@img.Title</h5>
             <p class="card-text"><a href="@img.Url" class="card-link" target="_blank">@img.Url</a></p>
             <footer class="blockquote-footer">@img.CreateDate</footer>
-            @if (user.Mail == "yang@axiangblog.cn")
+            @if (user.Mail == "yang@axiangblog.cn" || user.UserPrincipalName=="yang.yx91@live.cn")
             {
                 <div class="card-body">
                     <button class="btn btn-primary" @onclick="(() => DelImg(img.imgId) )">删除图片</button>
