@@ -6,17 +6,17 @@ namespace Data
 {
     public class UserInfoDocument
     {
-        public int ID { get; set; }
-        public string UserID { get; set; }
-        public string DisplayName { get; set; }
-        public string Email { get; set; }
-        public string UserPrincipalName { get; set; }
-        public string Password { get; set; }
-        public string NickName { get; set; }
-        public string HeadImg { get; set; }
-        public string OpenID { get; set; }
-        public string Phone { get; set; }
-        public DateTime CreateTime { get; set; }
-        public int IsDelete { get; set; }
+        public int iD { get; set; }
+        public string userID { get; set; }
+        public string displayName { get; set; }
+        public string email { get; set; }
+        public string userPrincipalName { get; set; }
+        public string password { get; set; }
+        public string nickName { get; set; }
+        public string headImg { get; set; }
+        public string openID { get; set; }
+        public string phone { get; set; }
+        public DateTime createTime { get; set; }
+        public int isDelete { get; set; }
     }
 }

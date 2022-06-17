@@ -53,10 +53,38 @@
 </table>	 
 }
 
+@if (users.Count>0)
+{
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">UserID</th>
+            <th scope="col">DisplayName</th>
+            <th scope="col">Email</th>
+            <th scope="col">UserPrincipalName</th>
+            <th scope="col">CreateTime</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var uitem in users)
+        {
+            <tr>
+                <td>@uitem.userID</td>
+                <td>@uitem.displayName</td>
+                <td>@uitem.email</td>
+                <td>@uitem.userPrincipalName</td>
+                <td>@uitem.createTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+            </tr>}
+    </tbody>
+</table>	 
+}
+
 @code {
     private User user;
 
     private IList<Microsoft.Graph.Message> messages = new List<Microsoft.Graph.Message>();
+
+    private IList<UserInfoDocument> users = new List<UserInfoDocument>();
 
     protected async override Task OnInitializedAsync()
     {
@@ -92,6 +120,8 @@
 
     private async Task GetMyMail()
     {
+        users = new List<UserInfoDocument>();
+
         var res = await GraphClient.Me.Messages
         .Request()
         .GetAsync();
@@ -104,7 +134,12 @@
 
     private async Task GetAllUsers()
     {
+         messages=new List<Microsoft.Graph.Message>();
         var userResult = await http.GetFromJsonAsync<List<UserInfoDocument>>("api/getusers");
+        if (userResult.Count>=0)
+        {
+            users = userResult;
+        }
 
     }
 
