@@ -18,6 +18,7 @@
     <p><button class="btn btn-primary" @onclick="GetMyMail">Get My Mails</button></p>
     @if(user.UserPrincipalName=="yang@axiangblog.cn" || user.UserPrincipalName == "yang.yx91@live.cn") {
          <p><button class="btn btn-primary" @onclick="GetAllUsers">Get Users</button></p>
+          <p><button class="btn btn-primary" @onclick="GetAllQueuePosts">Get QueuePosts</button></p>
     }
     
 }
@@ -79,12 +80,42 @@
 </table>	 
 }
 
+@if (queuePosts.Count>0)
+{
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">PostId</th>
+            <th scope="col">PostDate</th>
+            <th scope="col">PostTitle</th>
+            <th scope="col">PostContent</th>
+            <th scope="col">PostCategoryName</th>
+            <th scope="col">PostAuthor</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var qitem in queuePosts)
+        {
+            <tr>
+                <td>@qitem.post_Id</td>
+                <td>@qitem.post_Date.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@qitem.post_Title</td>
+                <td>@qitem.post_Content</td>
+                <td>@qitem.post_CategoryName</td>
+                <td>@qitem.post_Author</td>
+            </tr>}
+    </tbody>
+</table>	 
+}
+
 @code {
     private User user;
 
     private IList<Microsoft.Graph.Message> messages = new List<Microsoft.Graph.Message>();
 
     private IList<UserInfoDocument> users = new List<UserInfoDocument>();
+
+    private IList<QueuePostDocument> queuePosts = new List<QueuePostDocument>();
 
     protected async override Task OnInitializedAsync()
     {
@@ -121,7 +152,7 @@
     private async Task GetMyMail()
     {
         users = new List<UserInfoDocument>();
-
+        queuePosts = new List<QueuePostDocument>();
         var res = await GraphClient.Me.Messages
         .Request()
         .GetAsync();
@@ -135,12 +166,23 @@
     private async Task GetAllUsers()
     {
          messages=new List<Microsoft.Graph.Message>();
+         queuePosts = new List<QueuePostDocument>();
         var userResult = await http.GetFromJsonAsync<List<UserInfoDocument>>("api/getusers");
         if (userResult.Count>=0)
         {
             users = userResult;
         }
-
     }
 
+     private async Task GetAllQueuePosts()
+    {
+         users = new List<UserInfoDocument>();
+         messages=new List<Microsoft.Graph.Message>();
+        var queuePostResult = await http.GetFromJsonAsync<List<QueuePostDocument>>("api/getqueuepost");
+        if (queuePostResult.Count>=0)
+        {
+            queuePosts = queuePostResult;
+        }
+
+    }
 }
