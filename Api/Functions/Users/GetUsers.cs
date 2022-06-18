@@ -23,7 +23,8 @@ namespace Api.Functions.Users
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             //var condition = JsonConvert.DeserializeObject<CountOneBingImgCondition>(requestBody);
             //var count = await mDal.CountDocuments<BingImgModel>("imgId", condition.imgId);
-            var res = userDao.GetUsersByPager();
+            //var res = userDao.GetUsersByPager();
+            var res = UserDao.GetUsersByPagerSugar();
             return new OkObjectResult(res);
         }
     }

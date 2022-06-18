@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SqlSugar;
 
 namespace Api.DTO
 {
+    [SugarTable("UserInfos")]
     public class UserInfoModel
     {
+        [SugarColumn(IsPrimaryKey =true)]
         public int ID { get; set; }
         public string UserID { get; set; }
         public string DisplayName { get; set; }

@@ -3,12 +3,9 @@
     "",
     "\\Client",
     "\\Client\\Pages",
-    "\\Client\\Pages\\Auth",
     "\\Client\\Pages\\BingImg",
-    "\\Client\\Pages\\Nav",
-    "\\Client\\Pages\\Upload",
     "\\Client\\Pages\\WxPost"
   ],
-  "SelectedNode": "\\Client\\Pages\\WxPost\\NewPost.razor",
+  "SelectedNode": "\\axiangblogBlazor.sln",
   "PreviewInSolutionExplorer": false
 }

@@ -82,7 +82,7 @@ namespace Api.Service
         public async Task<IEnumerable<string>> GetCollectionNames()
         {
             var result = new List<string>();
-            var collectionNames = mongoDatabase.ListCollectionNames().ToList();
+            var collectionNames = await mongoDatabase.ListCollectionNames().ToListAsync();
 
             collectionNames.ForEach(cBson =>
             {
