@@ -3,6 +3,7 @@
     "",
     "\\Client",
     "\\Client\\Pages",
+    "\\Client\\Pages\\Auth",
     "\\Client\\Pages\\BingImg",
     "\\Client\\Pages\\WxPost"
   ],
