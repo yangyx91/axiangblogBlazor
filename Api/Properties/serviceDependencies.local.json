@@ -6,6 +6,13 @@
       "type": "signalr.function",
       "connectionId": "AzureSignalRConnectionString",
       "dynamicId": null
+    },
+    "cosmosdb1": {
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.DocumentDB/databaseAccounts/axiangdb",
+      "type": "cosmosdb.azure",
+      "connectionId": "ConnectionStrings",
+      "dynamicId": null
     }
   }
 }
