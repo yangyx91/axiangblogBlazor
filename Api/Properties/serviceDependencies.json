@@ -4,11 +4,6 @@
       "type": "signalr",
       "connectionId": "AzureSignalRConnectionString",
       "dynamicId": null
-    },
-    "cosmosdb1": {
-      "type": "cosmosdb",
-      "connectionId": "ConnectionStrings",
-      "dynamicId": null
     }
   }
 }
