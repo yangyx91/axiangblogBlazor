@@ -1,14 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Api",
-    "\\Api\\Functions",
-    "\\Api\\Functions\\CosmosDB",
-    "\\Client",
-    "\\Client\\Pages",
-    "\\Client\\Pages\\Auth",
-    "\\Client\\Pages\\BingImg",
-    "\\Client\\Pages\\WxPost"
+    ""
   ],
   "SelectedNode": "\\axiangblogBlazor.sln",
   "PreviewInSolutionExplorer": false
