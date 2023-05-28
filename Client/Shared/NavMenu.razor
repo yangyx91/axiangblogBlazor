@@ -21,43 +21,52 @@
     protected async override Task OnInitializedAsync()
     {
         //wxposts   
-        var wxposts = new MenuItem(){ Text = "文章管理"};
-
-        wxposts.AddItem(new MenuItem() { Text = "文章列表",Url = "/wxposts"});
-        wxposts.AddItem(new MenuItem(){ Text = "新建文章",Url = "/addwxpost"});
+        var wxposts = new MenuItem() { Text = "文章管理", Items = new List<MenuItem>{
+            new MenuItem() { Text = "文章列表",Url = "/wxposts"},
+            new MenuItem(){ Text = "新建文章",Url = "/addwxpost"}
+        }};
 
         IconSideMenuItems.Add(wxposts);
 
-        var wxpostTypes = new MenuItem() { Text = "话题管理" };
-
-        wxpostTypes.AddItem(new MenuItem() { Text = "话题列表", Url = "/wxpostTypes" });
-        wxpostTypes.AddItem(new MenuItem() { Text = "新建话题", Url = "/addwxpostType" });
+        var wxpostTypes = new MenuItem() { Text = "话题管理", Items = new List<MenuItem>
+        {
+            new MenuItem() { Text = "话题列表", Url = "/wxpostTypes" },
+            new MenuItem() { Text = "新建话题", Url = "/addwxpostType" }
+        } };
 
         IconSideMenuItems.Add(wxpostTypes);
 
-        var graph = new MenuItem() { Text = "Graph Restapi" };
-        graph.AddItem(new MenuItem() { Text = "OneDrive", Url = "/onedrive" });
-        graph.AddItem(new MenuItem() { Text = "个人资料", Url = "/user" });
+        var graph = new MenuItem() { Text = "Graph Restapi", Items = new List<MenuItem>
+        {
+            new MenuItem() { Text = "OneDrive", Url = "/onedrive" },
+            new MenuItem() { Text = "个人资料", Url = "/user" }
+        } };
 
         IconSideMenuItems.Add(graph);
 
-        var bingImgs = new MenuItem() { Text = "必应图片" };
-        bingImgs.AddItem(new MenuItem() { Text = "BingImgs主库", Url = "/bingimgs" });
-        bingImgs.AddItem(new MenuItem() { Text = "BingImgs分库", Url = "/tempbingimgs" });
-        bingImgs.AddItem(new MenuItem() { Text = "今日美图", Url = "/todayBingImg" });
+        var bingImgs = new MenuItem() { Text = "必应图片", Items = new List<MenuItem>
+        {
+            new MenuItem() { Text = "BingImgs主库", Url = "/bingimgs" },
+            new MenuItem() { Text = "BingImgs分库", Url = "/tempbingimgs" },
+            new MenuItem() { Text = "今日美图", Url = "/todayBingImg" }
+        } };
 
         IconSideMenuItems.Add(bingImgs);
 
-        var upload = new MenuItem() { Text = "素材管理" };
-        upload.AddItem(new MenuItem() { Text = "OSS管理", Url = "/aliYunFiles" });
-        upload.AddItem(new MenuItem() { Text = "又拍云管理", Url = "/upyImgs" });
-        upload.AddItem(new MenuItem() { Text = "又拍云上传", Url = "/upload" });
+        var upload = new MenuItem() { Text = "素材管理", Items = new List<MenuItem>
+        {
+            new MenuItem() { Text = "OSS管理", Url = "/aliYunFiles" },
+            new MenuItem() { Text = "又拍云管理", Url = "/upyImgs" },
+            new MenuItem() { Text = "又拍云上传", Url = "/upload" }
+         } };
 
         IconSideMenuItems.Add(upload);
 
-        var publicService = new MenuItem() { Text = "其他服务" };
-        publicService.AddItem(new MenuItem() { Text = "必应地图", Url = "/loadmap" });
-        publicService.AddItem(new MenuItem() { Text = "聊天室", Url = "/chat" });
+        var publicService = new MenuItem() { Text = "其他服务", Items = new List<MenuItem>
+        {
+            new MenuItem() { Text = "必应地图", Url = "/loadmap" },
+            new MenuItem() { Text = "聊天室", Url = "/chat" }
+        } };
 
         IconSideMenuItems.Add(publicService);
 

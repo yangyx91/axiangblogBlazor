@@ -7,14 +7,12 @@
 
 @if (imageDocuments.Count > 0)
     {
-<h4>Images</h4>
-
 <div class="card" style="width:30rem;">
     <div class="card-body">
         @foreach (var img in imageDocuments)
                 {
         <p>ImgId:@img.imgId</p>
-        <img class="rounded m-1" src="@img.Url" />
+        <img class="rounded m-1" src="@img.Url" style="width:800px;height:auto"/>
         <p>Title:@img.Title</p>
         <p>Url:@img.Url</p>
         <p>CreateDate:@img.CreateDate</p>
